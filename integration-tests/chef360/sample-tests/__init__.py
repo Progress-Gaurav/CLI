@@ -1,0 +1,2 @@
+# makes subdirectories modules and allows for duplicate python file names (put into a namespace)
+# per convention https://www.reddit.com/r/learnpython/comments/q8yjvw/still_confused_about_what_init_should_be_used_for/

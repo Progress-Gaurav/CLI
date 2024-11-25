@@ -1,0 +1,226 @@
+{
+    "instanceId": "05061c71-b870-4902-ad90-d0efd638cfac",
+    "jobId": "9a69c6c9-c2c6-437e-ac8c-23a5e4f360d8",
+    "name": "deploy-patch-0.12-windows",
+    "target": {
+      "executionType": "sequential",
+      "groups": [
+        {
+          "listId": "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "filterId": "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "filter": {
+            "key": "filter"
+          },
+          "distributionMethod": "rolling",
+          "successCriteria": [
+            {
+              "numRuns": {
+                "type": "percent",
+                "value": 100
+              },
+              "status": "success"
+            },
+            {
+              "numRuns": {
+                "type": "percent",
+                "value": 100
+              },
+              "status": "success"
+            }
+          ],
+          "nodeListType": "savedList",
+          "nodeIdentifiers": [
+            "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          ],
+          "timeoutSeconds": 6919,
+          "batchSize": {
+            "type": "percent",
+            "value": 1
+          }
+        },
+        {
+          "listId": "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "filterId": "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "filter": {
+            "key": "filter"
+          },
+          "distributionMethod": "rolling",
+          "successCriteria": [
+            {
+              "numRuns": {
+                "type": "percent",
+                "value": 100
+              },
+              "status": "success"
+            },
+            {
+              "numRuns": {
+                "type": "percent",
+                "value": 100
+              },
+              "status": "success"
+            }
+          ],
+          "nodeListType": "savedList",
+          "nodeIdentifiers": [
+            "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          ],
+          "timeoutSeconds": 6919,
+          "batchSize": {
+            "type": "percent",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "actions": {
+      "accessMode": "agent",
+      "steps": [
+        {
+          "expectedInputs": {
+            "passwd": {
+              "required": false,
+              "sensitive": true
+            }
+          },
+          "failureBehavior": {
+            "action": "retryThenFail",
+            "retryBackoffStrategy": {
+              "delaySeconds": 5,
+              "arguments": [
+                "{}",
+                "{}"
+              ],
+              "type": "linear"
+            }
+          },
+          "inputs": {
+            "listen_port": "8080",
+            "accesstoken": "ABCD"
+          },
+          "retryCount": 1,
+          "name": "install-nginx",
+          "description": "description",
+          "outputFieldRules": {
+            "key": {
+              "expression": ".example.files[0].name",
+              "sourceType": "artifact",
+              "source": "source",
+              "sensitive": true,
+              "extractMethod": "regEx",
+              "required": true
+            }
+          },
+          "interpreter": {
+            "skill": {
+              "minVersion": "1.0.0",
+              "maxVersion": "2.0.0"
+            },
+            "name": "chef/courier-interpreter/os/shell"
+          },
+          "conditions": [
+            {
+              "negate": false,
+              "value": "value",
+              "inputName": "inputName",
+              "operator": "eq"
+            },
+            {
+              "negate": false,
+              "value": "value",
+              "inputName": "inputName",
+              "operator": "eq"
+            }
+          ],
+          "command": {
+            "exec": "machine_reboot",
+            "args": {
+              "time": 90
+            }
+          },
+          "limits": {
+            "cores": 5,
+            "cpu": 0.23021358,
+            "timeoutSeconds": 7
+          }
+        },
+        {
+          "expectedInputs": {
+            "passwd": {
+              "required": false,
+              "sensitive": true
+            }
+          },
+          "failureBehavior": {
+            "action": "retryThenFail",
+            "retryBackoffStrategy": {
+              "delaySeconds": 5,
+              "arguments": [
+                "{}",
+                "{}"
+              ],
+              "type": "linear"
+            }
+          },
+          "inputs": {
+            "listen_port": "8080",
+            "accesstoken": "ABCD"
+          },
+          "retryCount": 1,
+          "name": "install-nginx",
+          "description": "description",
+          "outputFieldRules": {
+            "key": {
+              "expression": ".example.files[0].name",
+              "sourceType": "artifact",
+              "source": "source",
+              "sensitive": true,
+              "extractMethod": "regEx",
+              "required": true
+            }
+          },
+          "interpreter": {
+            "skill": {
+              "minVersion": "1.0.0",
+              "maxVersion": "2.0.0"
+            },
+            "name": "chef/courier-interpreter/os/shell"
+          },
+          "conditions": [
+            {
+              "negate": false,
+              "value": "value",
+              "inputName": "inputName",
+              "operator": "eq"
+            },
+            {
+              "negate": false,
+              "value": "value",
+              "inputName": "inputName",
+              "operator": "eq"
+            }
+          ],
+          "command": {
+            "exec": "machine_reboot",
+            "args": {
+              "time": 90
+            }
+          },
+          "limits": {
+            "cores": 5,
+            "cpu": 0.23021358,
+            "timeoutSeconds": 7
+          }
+        }
+      ]
+    },
+    "assignments": [
+      {
+        "jobRunId": "9a69c6c9-c2c6-437e-ac8c-13a5e4f360d8",
+        "nodeId": "9a69c6c9-c2c6-437e-ac8c-13a5e4f360d6",
+        "groupNumber": 1
+      }
+    ]
+  }

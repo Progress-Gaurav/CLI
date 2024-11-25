@@ -1,0 +1,4 @@
+{
+  "rrule": "RRULE:DTSTART=20230620;FREQ=DAILY",
+  "duration": 2
+}

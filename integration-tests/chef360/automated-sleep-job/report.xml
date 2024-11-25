@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites><testsuite name="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" tests="10" errors="0" failures="6" skipped="0" time="0.378"><testcase name="test_install_cli" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.02" /><testcase name="test_skill_agent" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.28" /><testcase name="test_install_skills" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.032" /><testcase name="test_skill_assembly" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.006"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">def test_skill_assembly():
+        # 17-defining the skill assembly(A) but changing the version (M/A){if the version are stable then its A otherwise M}. storing skillasssembly id(A)
+        assembly = subprocess.run(['chef-node-management-cli', 'management', 'assembly', 'create-assembly', '--body-file','integration-tests/chef360/automated-sleep-job/skill-assembly.json'], capture_output=True)
+        assert assembly.returncode == 0
+&gt;       res1= json.loads(assembly.stdout)
+
+test_sleep_job_automate.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/usr/lib/python3.10/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+/usr/lib/python3.10/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;json.decoder.JSONDecoder object at 0x7f23a4428ca0&gt;, s = 'Error:  error building body: open integration-tests/chef360/automated-sleep-job/skill-assembly.json: no such file or directory\n', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/lib/python3.10/json/decoder.py:355: JSONDecodeError</failure></testcase><testcase name="test_node_override_settings" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.006"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">def test_node_override_settings():
+        #18- create override settings(A)and storing the settingId(A)
+        override=subprocess.run(['chef-node-management-cli','management','setting','create-setting','--body-file','integration-tests/chef360/automated-sleep-job/node-override-setting.json'],capture_output=True)
+        assert override.returncode == 0
+&gt;       res2= json.loads(override.stdout)
+
+test_sleep_job_automate.py:171: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/usr/lib/python3.10/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+/usr/lib/python3.10/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;json.decoder.JSONDecoder object at 0x7f23a4428ca0&gt;, s = 'Error:  error building body: open integration-tests/chef360/automated-sleep-job/node-override-setting.json: no such file or directory\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/lib/python3.10/json/decoder.py:355: JSONDecodeError</failure></testcase><testcase name="test_cohort" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.006"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">def test_cohort():
+        #19-creating cohort(A) and storing the cohort id(A)
+        cohort=subprocess.run(['chef-node-management-cli','management','cohort','create-cohort','--body-file','integration-tests/chef360/automated-sleep-job/node-cohort.json'],capture_output=True)
+        assert cohort.returncode==0
+&gt;       res3=json.loads(cohort.stdout)
+
+test_sleep_job_automate.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/usr/lib/python3.10/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+/usr/lib/python3.10/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;json.decoder.JSONDecoder object at 0x7f23a4428ca0&gt;, s = 'Error:  error building body: open integration-tests/chef360/automated-sleep-job/node-cohort.json: no such file or directory\n', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/lib/python3.10/json/decoder.py:355: JSONDecodeError</failure></testcase><testcase name="test_get_key" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.004" /><testcase name="test_Node_enroll" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.006"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">def test_Node_enroll():
+        #20-node enrollment(M)
+        enroll=subprocess.run(['chef-node-management-cli','enrollment','enroll-node','--body-file','integration-tests/chef360/automated-sleep-job/enroll-linux.json'],capture_output=True)
+        assert enroll.returncode==0
+&gt;       res4=json.loads(enroll.stdout)
+
+test_sleep_job_automate.py:221: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/usr/lib/python3.10/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+/usr/lib/python3.10/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;json.decoder.JSONDecoder object at 0x7f23a4428ca0&gt;, s = 'Error:  error building body: open integration-tests/chef360/automated-sleep-job/enroll-linux.json: no such file or directory\n', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/lib/python3.10/json/decoder.py:355: JSONDecodeError</failure></testcase><testcase name="test_job" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.006"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">def test_job():
+        #21-creating a job(A)and getting jobId(A)
+        job_run=subprocess.run(['chef-courier-cli','scheduler','jobs','add-job','--body-file','integration-tests/chef360/automated-sleep-job/create-job-simple.json'],capture_output=True)
+        assert job_run.returncode==0
+&gt;       res5=json.loads(job_run.stdout)
+
+test_sleep_job_automate.py:237: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/usr/lib/python3.10/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+/usr/lib/python3.10/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;json.decoder.JSONDecoder object at 0x7f23a4428ca0&gt;, s = 'Error:  error building body: open integration-tests/chef360/automated-sleep-job/create-job-simple.json: no such file or directory\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/lib/python3.10/json/decoder.py:355: JSONDecodeError</failure></testcase><testcase name="test_get_instance" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.006"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">def test_get_instance():
+        result1=subprocess.run(['chef-courier-cli','state','instance','list-all','--job-id',JOB_ID],capture_output=True,text=True)
+&gt;       res6=json.loads(result1.stdout)
+
+test_sleep_job_automate.py:248: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/usr/lib/python3.10/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+/usr/lib/python3.10/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;json.decoder.JSONDecoder object at 0x7f23a4428ca0&gt;, s = 'Error:  invalid UUID length: 0\n', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/lib/python3.10/json/decoder.py:355: JSONDecodeError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,128 @@
+# dispatch integration tests with pytest from local /integration-tests directory
+name: Run pytest integration tests  (dispatch)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'The environment to deploy to'
+        required: true
+        default: 'production'
+      tests-to-run:
+        description: ''
+        required: true
+        default: 'sample-test'
+        type: choice
+        options:
+          - automate
+          - chef-360-platform
+          - infra-server
+          - infra19
+          - sample-test
+# ADD --test-suite=configuration \
+#    --test-runner=windows \
+#    --cafile=foo.pem \
+#    --device-name=WFHBLOOMIS \
+#    --profile-name=default \ 
+#    --tenant-domain="qa1.demos.chef.co" \
+#    --tenant-url="http://qa1.demos.chef.co:31000" \
+#    --qmetrykey from GHA secret
+
+jobs:   
+  py-test:
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+        os: [ubuntu-latest, windows-latest]         # macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # install poetry (see if untrusted plugin works)
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.1.12
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Install dependencies
+      # from https://stackoverflow.com/questions/77446605/running-python-poetry-unit-test-in-github-actions
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Install project
+        run: poetry install --no-interaction --no-root
+      - name: Run tests
+        run: |
+          source .venv/bin/activate
+          poetry run pytest integration-tests\sample-test --junitxml=reports\report.xml
+          coverage report
+
+      # - name: Lint with Ruff
+      #   run: |
+      #     pip install ruff
+      #     ruff --format=github --target-version=py310 .
+      #   continue-on-error: true
+
+      # need to allow this by changing org permissions in GitHub Enterprise
+      # download any tools required, curl, or CLI-latest (using https://github.com/marketplace/actions/release-downloader)
+      # - uses: robinraju/release-downloader@v1
+      #   with:
+      #     repository: 'chef/arch-sample-cli'
+      #     latest: true
+      #     # Download assets from a specific tag/version - e.g: v1.0.1
+      #     tag: ''
+      #     # The name of the file to download.
+      #     # Use this field only to specify filenames other than tarball or zipball, if any.
+      #     # Supports wildcard pattern (eg: '*', '*.deb', '*.zip' etc..)
+      #     fileName: ''
+      #     out-file-path: 'bin'
+      #     extract: true
+      #     # Github access token to download files from private repositories
+      #     # https://docs.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+      #     # eg: token: ${{ secrets.MY_TOKEN }}
+      #     token: ''
+    
+      # binaries for chef360 are already in /bin
+      # - name: Download CLI release with curl
+      #   run: |
+      #     curl -Lo $RUNNER_TEMP/arch-sample-cli.tar.gz https://github.com/chef/arch-sample-cli/releases/download/v2.4.1/arch-sample-cli_.v2.4.1_Linux_x86_64.tar.gz
+      #   # tar -xzvf $RUNNER_TEMP/arch-sample-cli.tar.gz
+      #   # rm $RUNNER_TEMP/arch-sample-cli.tar.gz"
+      #   # chmod +x $RUNNER_TEMP/arch-sample-cli
+      
+      - name: create report folder
+        run: |
+          mkdir ./reports
+        if: ${{ always() }}
+      
+      - name: Test with pytest
+        run: |
+          pytest ./integration-tests/${{ github.event.inputs.tests-to-run }} --html=./reports/report.html 
+        if: ${{ always() }}
+      # - name: Generate Coverage Report - use pytest-cov
+      #   run: |
+      #     coverage report -m
+
+      - name: Upload HTML test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}-integration-test-report
+          path: ./reports
+        if: ${{ always() }}
