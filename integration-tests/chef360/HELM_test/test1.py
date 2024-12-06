@@ -35,8 +35,8 @@ from configparser import ConfigParser
 #         print( list_jobs.stdout)
 #         assert  list_jobs.returncode==0
  
-# If on Ubuntu:
-#sudo apt update -y
+# #If on Ubuntu:
+# #sudo apt update -y
 # def test_ubuntu():
 #         print(5)
 #         list_jobs=subprocess.run(f"sudo apt update -y",shell=True,capture_output=True)
@@ -63,7 +63,7 @@ from configparser import ConfigParser
 #         assert  list_jobs.returncode==0
  
 
-
+# #curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 # #curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 # def test_download_binary():
 #         print(8)
@@ -73,6 +73,14 @@ from configparser import ConfigParser
 #         assert  list_jobs.returncode==0
  
 
+#  # chmod +x kubectl
+# def test_install_kubectl():
+#         print(10)
+#         list_jobs=subprocess.run(f"chmod +x kubectl",shell=True,capture_output=True)
+#         print( list_jobs.stdout)
+#         assert  list_jobs.returncode==0
+
+
 # # sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 # def test_install_kubectl():
 #         print(9)
@@ -81,12 +89,7 @@ from configparser import ConfigParser
 #         assert  list_jobs.returncode==0
  
 
-# # chmod +x kubectl
-# def test_install_kubectl():
-#         print(10)
-#         list_jobs=subprocess.run(f"chmod +x kubectl",shell=True,capture_output=True)
-#         print( list_jobs.stdout)
-#         assert  list_jobs.returncode==0
+
  
 
 # # mkdir -p ~/.local/bin
@@ -155,6 +158,14 @@ from configparser import ConfigParser
 #         list_jobs=subprocess.run(f"sudo minikube status",shell=True,capture_output=True)
 #         print( list_jobs.stdout)
 #         assert  list_jobs.returncode==0
+
+
+# # # kubectl version
+# def test_version_check_kubernetes123():
+#         print(13)
+#         list_jobs=subprocess.run(f"sudo kubectl version",shell=True,capture_output=True)
+#         print( list_jobs.stdout)
+#         assert b'Version:' in list_jobs.stdout
 
 # # yes \"y\" | sudo apt install awscli
 # def test_install_awscli():
@@ -259,7 +270,7 @@ from configparser import ConfigParser
 #     print( list_jobs.stdout)
 #     assert  list_jobs.returncode==0
  
-# git clone git@github.com:progress-platform-services/helm.git
+# #git clone git@github.com:progress-platform-services/helm.git
 # def test_clone_git():
 #     print(19)
 #     list_jobs=subprocess.run(f"yes \"y\" | git clone git@github.com:progress-platform-services/helm.git",shell=True,capture_output=True)
@@ -287,28 +298,28 @@ from configparser import ConfigParser
 #     assert  list_jobs.returncode==0
 
 
-def test_mailpit():
-    print(19)
-    command = "sudo nohup kubectl port-forward --namespace default service/mailpit --address 0.0.0.0 31100:8025 &"
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+# def test_mailpit():
+#     print(19)
+#     command = "sudo nohup kubectl port-forward --namespace default service/mailpit --address 0.0.0.0 31100:8025 &"
+#     process = subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    # Wait for a moment to ensure the process starts
-    time.sleep(2)
-
-
-def test_reverse_proxy():
-    print(19)
-    command = "sudo nohup kubectl port-forward --namespace default service/nginx-reverse-proxy --address 0.0.0.0 31000:8080 &"
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-    # Wait for a moment to ensure the process starts
-    time.sleep(2)
+#     # Wait for a moment to ensure the process starts
+#     time.sleep(2)
 
 
-def test_rabbit_mq():
-    print(19)
-    command = "sudo nohup kubectl port-forward --namespace default service/chef-platform-rabbitmq --address 0.0.0.0 31050:5672 &"
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+# def test_reverse_proxy():
+#     print(19)
+#     command = "sudo nohup kubectl port-forward --namespace default service/nginx-reverse-proxy --address 0.0.0.0 31000:8080 &"
+#     process = subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    # Wait for a moment to ensure the process starts
-    time.sleep(2)
+#     # Wait for a moment to ensure the process starts
+#     time.sleep(2)
+
+
+# def test_rabbit_mq():
+#     print(19)
+#     command = "sudo nohup kubectl port-forward --namespace default service/chef-platform-rabbitmq --address 0.0.0.0 31050:5672 &"
+#     process = subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+#     # Wait for a moment to ensure the process starts
+#     time.sleep(2)
