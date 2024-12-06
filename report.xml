@@ -1,2 +1,2 @@
 <?xml version='1.0' encoding='utf-8'?>
-<testsuites><testsuite name="integration-tests.chef360.HELM_test.test1" tests="1" errors="0" failures="0" skipped="0" time="0.978"><testcase name="test_minikube_status" classname="integration-tests.chef360.HELM_test.test1" time="0.489" /></testsuite></testsuites>
+<testsuites><testsuite name="integration-tests.chef360.HELM_test.test1" tests="3" errors="0" failures="0" skipped="0" time="0.004"><testcase name="test_mailpit" classname="integration-tests.chef360.HELM_test.test1" time="0.001" /><testcase name="test_reverse_proxy" classname="integration-tests.chef360.HELM_test.test1" time="0.001" /><testcase name="test_rabbit_mq" classname="integration-tests.chef360.HELM_test.test1" time="0.001" /></testsuite></testsuites>
