@@ -74,7 +74,7 @@ from configparser import ConfigParser
  
 
 #  # chmod +x kubectl
-# def test_install_kubectl():
+# def test_set_kubectl():
 #         print(10)
 #         list_jobs=subprocess.run(f"chmod +x kubectl",shell=True,capture_output=True)
 #         print( list_jobs.stdout)
