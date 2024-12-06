@@ -273,7 +273,7 @@ from configparser import ConfigParser
 # #git clone git@github.com:progress-platform-services/helm.git
 # def test_clone_git():
 #     print(19)
-#     list_jobs=subprocess.run(f"yes \"y\" | git clone git@github.com:progress-platform-services/helm.git",shell=True,capture_output=True)
+#     list_jobs=subprocess.run(f"GIT_SSH_COMMAND=\"ssh -o StrictHostKeyChecking=no\" git clone git@github.com:progress-platform-services/helm.git",shell=True,capture_output=True)
 #     print( list_jobs.stdout)
 #     assert  list_jobs.returncode==0
 
