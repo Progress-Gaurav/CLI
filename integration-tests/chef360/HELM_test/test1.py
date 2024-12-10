@@ -170,22 +170,13 @@ def test_install_awscli():
 
 def test_get_access_keys(get_env_variables, monkeypatch):
     print("\n",20, " Configuring AWS credentials")
-    # Set environment variables using monkeypatch
-    monkeypatch.setenv("AWS_ACCESS_KEY_ID", get_env_variables["AWS_ACCESS_KEY_ID"])
-    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", get_env_variables["AWS_SECRET_ACCESS_KEY"])
-    monkeypatch.setenv("AWS_SESSION_TOKEN", get_env_variables["AWS_SESSION_TOKEN"])
 
     # Fetch environment variables
     AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
     AWS_SESSION_TOKEN = os.getenv("AWS_SESSION_TOKEN")
 
-    # Print for debugging
-    print("AWS_ACCESS_KEY_ID:", AWS_ACCESS_KEY_ID)
-    print("AWS_SECRET_ACCESS_KEY:", AWS_SECRET_ACCESS_KEY)
-    print("AWS_SESSION_TOKEN:", AWS_SESSION_TOKEN)
-
-
+   
     list_jobs=subprocess.run(f"mkdir -p ~/.aws",shell=True,capture_output=True)
     print( list_jobs.stdout)
     assert  list_jobs.returncode==0
