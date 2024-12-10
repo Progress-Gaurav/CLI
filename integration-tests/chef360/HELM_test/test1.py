@@ -2,6 +2,7 @@ import subprocess,json
 import time
 import os
 from configparser import ConfigParser
+import platform
  
 # #### Helm Setup
 # curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
@@ -34,10 +35,12 @@ def test_get_Helm_version():
         list_jobs=subprocess.run(f"helm version",shell=True,capture_output=True)
         print( list_jobs.stdout)
         assert  list_jobs.returncode==0
- 
+
+
+
 #If on Ubuntu:
 #sudo apt update -y
-def test_ubuntu():
+def update_ubuntu():
         print("\n",5," Updates the package list using the apt package manager.")
         list_jobs=subprocess.run(f"sudo apt update -y",shell=True,capture_output=True)
         time.sleep(15)
@@ -47,7 +50,7 @@ def test_ubuntu():
  
 
 # sudo snap install docker
-def test_instll_docker():
+def install_docker_ubuntu():
         print("\n",6, " Installs Docker via the Snap package manager")
         list_jobs=subprocess.run(f"sudo snap install docker",shell=True,capture_output=True)
         time.sleep(10)
@@ -56,11 +59,66 @@ def test_instll_docker():
  
 
 # sudo snap start docker
-def test_start_docker():
+def start_docker_ubuntu():
         print("\n",7," Starts the Docker service.")
         list_jobs=subprocess.run(f"sudo snap start docker",shell=True,capture_output=True)
         print( list_jobs.stdout)
         assert  list_jobs.returncode==0
+
+
+#If on RHEL, Centos or Amazon Linux:
+def update_linux():
+        print("\n",7," Updates the package list using the apt package manager.")
+        list_jobs=subprocess.run(f"sudo yum update -y",shell=True,capture_output=True)
+        print( list_jobs.stdout)
+        assert  list_jobs.returncode==0
+
+
+def install_docker_linux():
+        print("\n",7," Starts the Docker service.")
+        list_jobs=subprocess.run(f"sudo yum install docker -y",shell=True,capture_output=True)
+        print( list_jobs.stdout)
+        assert  list_jobs.returncode==0
+
+
+def start_docker_linux():
+        print("\n",7," Starts the Docker service.")
+        list_jobs=subprocess.run(f"sudo systemctl start docker",shell=True,capture_output=True)
+        print( list_jobs.stdout)
+        assert  list_jobs.returncode==0
+
+
+def add_user_linux():
+        print("\n",7," Adds the current user to the docker group.")
+        list_jobs=subprocess.run(f"sudo usermod -aG docker $USER && newgrp docker",shell=True,capture_output=True)
+        print( list_jobs.stdout)
+        assert  list_jobs.returncode==0
+
+
+def test_install_docker():
+#   current_os=input("Enter the os\n1.Linux\n2.Mac OS\n3.Linux")
+    current_os = platform.system()
+    print(current_os)
+    
+    if current_os == "Linux":
+        with open("/etc/os-release") as f:
+                os_info = f.read()
+
+                if "Ubuntu" in os_info:
+                      update_ubuntu()
+                      install_docker_ubuntu()
+                      start_docker_ubuntu()
+                else:
+                      update_linux()
+                      install_docker_linux()
+                      start_docker_linux()
+                      add_user_linux()     
+    elif current_os == "Windows":
+        print("Not supported")
+    else:
+        print(f"Unsupported OS: {current_os}")
+ 
+
  
 
 
@@ -168,40 +226,23 @@ def test_install_awscli():
         print( list_jobs.stdout)
         assert  list_jobs.returncode==0
 
-def test_get_access_keys(get_env_variables, monkeypatch):
+def test_get_access_keys(get_env_variables):
     print("\n",20, " Configuring AWS credentials")
 
     # Fetch environment variables
-    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-    AWS_SESSION_TOKEN = os.getenv("AWS_SESSION_TOKEN")
+    AWS_ACCESS_KEY_ID = get_env_variables["AWS_ACCESS_KEY_ID"]
+    AWS_SECRET_ACCESS_KEY = get_env_variables["AWS_SECRET_ACCESS_KEY"]
+    AWS_SESSION_TOKEN = get_env_variables["AWS_SESSION_TOKEN"]
 
    
     list_jobs=subprocess.run(f"mkdir -p ~/.aws",shell=True,capture_output=True)
     print( list_jobs.stdout)
     assert  list_jobs.returncode==0
     
-    list_jobs=subprocess.run(f"echo \"[default]\" > ~/.aws/credentials",shell=True,capture_output=True)
-    print( list_jobs.stdout)
-    assert  list_jobs.returncode==0
-
-    cmd1="echo \"aws_access_key_id=\" "+AWS_ACCESS_KEY_ID+" >> ~/.aws/credentials"
-    list_jobs=subprocess.run(cmd1,shell=True,capture_output=True)
-    print( list_jobs.stdout)
-    assert  list_jobs.returncode==0
-
-    cmd2="echo \"aws_secret_access_key=\" "+AWS_SECRET_ACCESS_KEY+" >> ~/.aws/credentials"
-    list_jobs=subprocess.run(cmd2,shell=True,capture_output=True)
-    print( list_jobs.stdout)
-    assert  list_jobs.returncode==0
-
-    aws_access_key_id = AWS_ACCESS_KEY_ID
-    aws_secret_access_key = AWS_SECRET_ACCESS_KEY
-    aws_session_token = AWS_SESSION_TOKEN
 
     # AWS credentials file path
     credentials_file = os.path.expanduser("~/.aws/credentials")
-    config_file = os.path.expanduser("~/.aws/config")
+    print(credentials_file)
 
     #  Create config parser for credentials file
     credentials = ConfigParser()
@@ -210,28 +251,16 @@ def test_get_access_keys(get_env_variables, monkeypatch):
     # Set credentials under the default profile
     if not credentials.has_section('default'):
         credentials.add_section('default')
-    credentials.set('default', 'aws_access_key_id', aws_access_key_id)
-    credentials.set('default', 'aws_secret_access_key', aws_secret_access_key)
-    credentials.set('default', 'aws_session_token', aws_session_token)
 
+    credentials.set('default', 'aws_access_key_id', AWS_ACCESS_KEY_ID)
+    credentials.set('default', 'aws_secret_access_key', AWS_SECRET_ACCESS_KEY)
+    credentials.set('default', 'aws_session_token', AWS_SESSION_TOKEN)
+    
     # Write the updated credentials file
     with open(credentials_file, 'w') as f:
         credentials.write(f)
-
-    # Create config file for region
-    config = ConfigParser()
-    config.read(config_file)
-
-    # Set the region under the default profile
-    if not config.has_section('default'):
-        config.add_section('default')
-    config.set('default', 'session_token', aws_session_token)
-
-    # Write the updated config file
-    with open(config_file, 'w') as f:
-        config.write(f)
-
     print("AWS credentials and config files have been updated.")
+
 
 
 def test_awscli():
@@ -265,10 +294,10 @@ def test_clone_git():
 
 
 #sed -i 's/tenant-1.dev-360.chef.co/ec2-3-94-190-118.compute-1.amazonaws.com/g' values.yaml
-def test_helm_deploy(get_env_variables, monkeypatch):
+def test_helm_deploy(get_env_variables):
     print("\n",25, " changing FQDN in the file")
-    monkeypatch.setenv("FQDN", get_env_variables["FQDN"])
-    FQDN = os.getenv("FQDN")
+    #monkeypatch.setenv("FQDN", get_env_variables["FQDN"])
+    FQDN = get_env_variables["FQDN"]
     
     print(FQDN)
     cmd="sed -i 's/tenant-1.dev-360.chef.co/"+FQDN+"/g' helm/chef-platform/values.yaml"
@@ -285,8 +314,8 @@ def test_install_chef_platform():
     assert  list_jobs.returncode==0
 
 
-def test_mailpit():
-    print("\n",27, " This command exposes the nginx-reverse-proxy service running in Kubernetes on port 8080 to be accessible on your machine (and possibly other devices) via port 31000.")
+def test_mailpit_port_exposure():
+    print("\n",27, " This command runs kubectl port-forward in the background (using nohup) to expose the mailpit service in the default namespace on localhost and all network interfaces (0.0.0.0), mapping port 31100 to 8025")
     command = "sudo nohup kubectl port-forward --namespace default service/mailpit --address 0.0.0.0 31100:8025 &"
     process = subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
@@ -295,7 +324,7 @@ def test_mailpit():
 
 
 def test_reverse_proxy():
-    print("\n",28," This command exposes the RabbitMQ service (chef-platform-rabbitmq) running in the Kubernetes cluster on port 5672 to your local machine’s port 31050, allowing external applications or users to connect to RabbitMQ via 31050.")
+    print("\n",28," This command runs kubectl port-forward in the background (using nohup) to expose the nginx-reverse-proxy service in the default namespace on all network interfaces (0.0.0.0), mapping port 31000 on the host to port 8080 on the service..")
     command = "sudo nohup kubectl port-forward --namespace default service/nginx-reverse-proxy --address 0.0.0.0 31000:8080 &"
     process = subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
@@ -313,8 +342,49 @@ def test_rabbit_mq():
 
 
 
+def for_MAC(FQDN):
+    cmd1= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-platform-auth-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command1=subprocess.run(cmd1,shell=True)
+    cmd2= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-node-management-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command2=subprocess.run(cmd2,shell=True)
+    cmd3= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-courier-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command3=subprocess.run(cmd3,shell=True)
 
-# cmd1="curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-node-management-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
-# print(cmd1)
+def for_linux(FQDN):
+    cmd1= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-platform-auth-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command1=subprocess.run(cmd1,shell=True)
+    cmd2= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-node-management-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command2=subprocess.run(cmd2,shell=True)
+    cmd3= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-courier-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command3=subprocess.run(cmd3,shell=True)
+def for_Windows(FQDN):
+    cmd1="$env:TOOL=\"chef-platform-auth-cli\"; $env:SERVER=\""+FQDN+":31000\"; Invoke-WebRequest -Uri \""+FQDN+":31000/platform/bundledtools/v1/static/install.ps1\" -UseBasicParsing | Invoke-Expression"
+    command1=subprocess.run(cmd1,shell=True)
+    cmd2="$env:TOOL=\"chef-node-management-cli\"; $env:SERVER=\""+FQDN+":31000\"; Invoke-WebRequest -Uri \""+FQDN+":31000/platform/bundledtools/v1/static/install.ps1\" -UseBasicParsing | Invoke-Expression"
+    command2=subprocess.run(cmd2,shell=True)
+    cmd3="$env:TOOL=\"chef-courier-cli\"; $env:SERVER=\""+FQDN+":31000\"; Invoke-WebRequest -Uri \""+FQDN+":31000/platform/bundledtools/v1/static/install.ps1\" -UseBasicParsing | Invoke-Expression"
+    command3=subprocess.run(cmd3,shell=True)
+
+
+
+def test_install_cli(get_env_variables):
+    current_os = platform.system()
+    FQDN = get_env_variables["FQDN"]
+    print(current_os)
+    
+    if current_os == "Linux":
+        for_linux(FQDN)
+    elif current_os == "Darwin":
+        for_MAC(FQDN)
+    elif current_os == "Windows":
+        for_Windows(FQDN)
+        pass
+    else:
+        print(f"Unsupported OS: {current_os}")
+
+
+
+
+
 
 
