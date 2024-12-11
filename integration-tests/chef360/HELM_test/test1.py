@@ -234,8 +234,9 @@ def test_get_access_keys(get_env_variables):
     AWS_SECRET_ACCESS_KEY = get_env_variables["AWS_SECRET_ACCESS_KEY"]
     AWS_SESSION_TOKEN = get_env_variables["AWS_SESSION_TOKEN"]
 
-   
-    list_jobs=subprocess.run(f"mkdir -p ~/.aws",shell=True,capture_output=True)
+    path1=os.path.expanduser("~/.aws")
+    cmd="mkdir -p "+path1
+    list_jobs=subprocess.run(cmd,shell=True,capture_output=True)
     print( list_jobs.stdout)
     assert  list_jobs.returncode==0
     
@@ -300,7 +301,8 @@ def test_helm_deploy(get_env_variables):
     FQDN = get_env_variables["FQDN"]
     
     print(FQDN)
-    cmd="sed -i 's/tenant-1.dev-360.chef.co/"+FQDN+"/g' helm/chef-platform/values.yaml"
+    path1=os.path.expanduser("helm/chef-platform/values.yaml")
+    cmd="sed -i 's/tenant-1.dev-360.chef.co/"+FQDN+"/g' "+path1
     list_jobs=subprocess.run(cmd,shell=True,capture_output=True)
     print( list_jobs.stdout)
     assert  list_jobs.returncode==0
@@ -309,32 +311,36 @@ def test_helm_deploy(get_env_variables):
 # #sudo helm install chef-platform .
 def test_install_chef_platform():
     print("\n",26, " Installing chef platform")
-    list_jobs=subprocess.run(f"sudo helm install chef-platform .",shell=True,capture_output=True, cwd="helm/chef-platform")
+    path1= os.path.expanduser("helm/chef-platform")
+    list_jobs=subprocess.run(f"sudo helm install chef-platform .",shell=True,capture_output=True, cwd=path1)
     print( list_jobs.stdout)
     assert  list_jobs.returncode==0
 
 
-def test_mailpit_port_exposure():
+def test_mailpit_port_exposure(get_env_variables):
+    port=get_env_variables["PORT_FOR_MAILPIT"]
     print("\n",27, " This command runs kubectl port-forward in the background (using nohup) to expose the mailpit service in the default namespace on localhost and all network interfaces (0.0.0.0), mapping port 31100 to 8025")
-    command = "sudo nohup kubectl port-forward --namespace default service/mailpit --address 0.0.0.0 31100:8025 &"
+    command = "sudo nohup kubectl port-forward --namespace default service/mailpit --address 0.0.0.0 "+port+":8025 &"
     process = subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Wait for a moment to ensure the process starts
     time.sleep(2)
 
 
-def test_reverse_proxy():
+def test_reverse_proxy(get_env_variables):
+    port=get_env_variables["PORT_FOR_NGINX_REVERSE_PROXY"]
     print("\n",28," This command runs kubectl port-forward in the background (using nohup) to expose the nginx-reverse-proxy service in the default namespace on all network interfaces (0.0.0.0), mapping port 31000 on the host to port 8080 on the service..")
-    command = "sudo nohup kubectl port-forward --namespace default service/nginx-reverse-proxy --address 0.0.0.0 31000:8080 &"
+    command = "sudo nohup kubectl port-forward --namespace default service/nginx-reverse-proxy --address 0.0.0.0 "+port+":8080 &"
     process = subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Wait for a moment to ensure the process starts
     time.sleep(2)
 
 
-def test_rabbit_mq():
+def test_rabbit_mq(get_env_variables):
+    port=get_env_variables["PORT_FOR_RABBITMQ"]
     print("\n",29," It forwards local port 31050 to port 5672 of the chef-platform-rabbitmq service in the Kubernetes default namespace, making RabbitMQ accessible externally")
-    command = "sudo nohup kubectl port-forward --namespace default service/chef-platform-rabbitmq --address 0.0.0.0 31050:5672 &"
+    command = "sudo nohup kubectl port-forward --namespace default service/chef-platform-rabbitmq --address 0.0.0.0 "+port+":5672 &"
     process = subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Wait for a moment to ensure the process starts
