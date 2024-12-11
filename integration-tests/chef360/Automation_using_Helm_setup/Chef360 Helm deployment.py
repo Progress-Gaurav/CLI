@@ -351,7 +351,7 @@ def test_rabbit_mq(get_env_variables):
 
 
 def test_install_cli(get_env_variables):
-    print("\n"+28+" Installing CLI based on the OS")
+    print("\n",28," Installing CLI based on the OS")
     current_os = platform.system()
     print("\n", current_os)
     FQDN = get_env_variables["FQDN"]
@@ -395,7 +395,7 @@ def for_linux(FQDN):
 
 
 def test_cli_installed():
-    print("\n"+29+" testing if CLI's are installed or not")
+    print("\n",29," testing if CLI's are installed or not")
     checkstatus_platform_auth_cli=subprocess.run('chef-platform-auth-cli --help',capture_output=True,shell=True,text=True)
     print(checkstatus_platform_auth_cli.stdout)
     assert checkstatus_platform_auth_cli.returncode==0
