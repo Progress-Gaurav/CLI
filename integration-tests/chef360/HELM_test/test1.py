@@ -96,7 +96,6 @@ def add_user_linux():
 
 
 def test_install_docker():
-#   current_os=input("Enter the os\n1.Linux\n2.Mac OS\n3.Linux")
     current_os = platform.system()
     print(current_os)
     
@@ -120,8 +119,6 @@ def test_install_docker():
  
 
  
-
-
 #curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 def test_download_binary():
         print("\n",8," Downloads the latest stable version of the kubectl binary for Linux (amd64 architecture)")
@@ -347,36 +344,10 @@ def test_rabbit_mq(get_env_variables):
     time.sleep(2)
 
 
-
-def for_MAC(FQDN):
-    cmd1= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-platform-auth-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
-    command1=subprocess.run(cmd1,shell=True)
-    cmd2= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-node-management-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
-    command2=subprocess.run(cmd2,shell=True)
-    cmd3= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-courier-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
-    command3=subprocess.run(cmd3,shell=True)
-
-def for_linux(FQDN):
-    cmd1= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-platform-auth-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
-    command1=subprocess.run(cmd1,shell=True)
-    cmd2= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-node-management-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
-    command2=subprocess.run(cmd2,shell=True)
-    cmd3= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-courier-cli\" SERVER=\""+FQDN+":31000\" VERSION=\"latest\" bash -"
-    command3=subprocess.run(cmd3,shell=True)
-def for_Windows(FQDN):
-    cmd1="$env:TOOL=\"chef-platform-auth-cli\"; $env:SERVER=\""+FQDN+":31000\"; Invoke-WebRequest -Uri \""+FQDN+":31000/platform/bundledtools/v1/static/install.ps1\" -UseBasicParsing | Invoke-Expression"
-    command1=subprocess.run(cmd1,shell=True)
-    cmd2="$env:TOOL=\"chef-node-management-cli\"; $env:SERVER=\""+FQDN+":31000\"; Invoke-WebRequest -Uri \""+FQDN+":31000/platform/bundledtools/v1/static/install.ps1\" -UseBasicParsing | Invoke-Expression"
-    command2=subprocess.run(cmd2,shell=True)
-    cmd3="$env:TOOL=\"chef-courier-cli\"; $env:SERVER=\""+FQDN+":31000\"; Invoke-WebRequest -Uri \""+FQDN+":31000/platform/bundledtools/v1/static/install.ps1\" -UseBasicParsing | Invoke-Expression"
-    command3=subprocess.run(cmd3,shell=True)
-
-
-
 def test_install_cli(get_env_variables):
     current_os = platform.system()
+    print("\n", current_os)
     FQDN = get_env_variables["FQDN"]
-    print(current_os)
     
     if current_os == "Linux":
         for_linux(FQDN)
@@ -384,9 +355,50 @@ def test_install_cli(get_env_variables):
         for_MAC(FQDN)
     elif current_os == "Windows":
         for_Windows(FQDN)
-        pass
     else:
         print(f"Unsupported OS: {current_os}")
+
+
+def for_MAC(FQDN):
+    cmd1= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-platform-auth-cli\" SERVER=\"http://"+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command1=subprocess.run(cmd1,shell=True)
+    cmd2= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-node-management-cli\" SERVER=\"http://"+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command2=subprocess.run(cmd2,shell=True)
+    cmd3= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-courier-cli\" SERVER=\"http://"+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command3=subprocess.run(cmd3,shell=True)
+
+
+def for_linux(FQDN):
+    cmd1= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-platform-auth-cli\" SERVER=\"http://"+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command1=subprocess.run(cmd1,shell=True)
+    cmd2= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-node-management-cli\" SERVER=\"http://"+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command2=subprocess.run(cmd2,shell=True)
+    cmd3= "curl -sk http://"+FQDN+":31000/platform/bundledtools/v1/static/install.sh | TOOL=\"chef-courier-cli\" SERVER=\"http://"+FQDN+":31000\" VERSION=\"latest\" bash -"
+    command3=subprocess.run(cmd3,shell=True)
+
+
+def for_Windows(FQDN):
+    cmd1="$env:TOOL=\"chef-platform-auth-cli\"; $env:SERVER=\"http://"+FQDN+":31000\"; Invoke-WebRequest -Uri \"http://"+FQDN+":31000/platform/bundledtools/v1/static/install.ps1\" -UseBasicParsing | Invoke-Expression"
+    command1=subprocess.run(cmd1,shell=True)
+    cmd2="$env:TOOL=\"chef-node-management-cli\"; $env:SERVER=\"http://"+FQDN+":31000\"; Invoke-WebRequest -Uri \"http://"+FQDN+":31000/platform/bundledtools/v1/static/install.ps1\" -UseBasicParsing | Invoke-Expression"
+    command2=subprocess.run(cmd2,shell=True)
+    cmd3="$env:TOOL=\"chef-courier-cli\"; $env:SERVER=\"http://"+FQDN+":31000\"; Invoke-WebRequest -Uri \"http://"+FQDN+":31000/platform/bundledtools/v1/static/install.ps1\" -UseBasicParsing | Invoke-Expression"
+    command3=subprocess.run(cmd3,shell=True)
+
+
+
+def test_cli_installed():
+    checkstatus_platform_auth_cli=subprocess.run('chef-platform-auth-cli --help',capture_output=True,shell=True,text=True)
+    print(checkstatus_platform_auth_cli.stdout)
+    assert checkstatus_platform_auth_cli.returncode==0
+
+    checkstatus_chef_courier_cli=subprocess.run('chef-courier-cli --help',capture_output=True,shell=True, text=True)
+    print(checkstatus_chef_courier_cli.stdout)
+    assert checkstatus_chef_courier_cli.returncode==0
+
+    checkstatus_node_management_cli=subprocess.run('chef-node-management-cli --help',capture_output=True,shell=True,text=True)
+    print(checkstatus_node_management_cli.stdout)
+    assert checkstatus_node_management_cli.returncode==0
 
 
 
