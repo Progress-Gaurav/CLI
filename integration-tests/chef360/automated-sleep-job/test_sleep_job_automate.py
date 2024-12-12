@@ -17,7 +17,7 @@ def test_skill_agent():
     assert res["code"]== 200, "error"
  
  
-    16-defining all the skills(A) and verifying skills(A)
+    # 16-defining all the skills(A) and verifying skills(A)
 def test_install_skills():
     #courier-runner-skill
     skill1 = subprocess.run(f"chef-node-management-cli management skill create-skill --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/courier-runner-skill.json --profile node-manager",shell=True, capture_output=True)
