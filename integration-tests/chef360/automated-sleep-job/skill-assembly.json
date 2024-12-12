@@ -1,12 +1,14 @@
 {
-  "name": "my-skill-assembl26",
+  "name": "my-skill-assembly",
   "skills": [
     {
       "action": "add",
       "skill": {
-        "channel": "stable",
         "name": "courier-runner",
-        "value": ["1.4.2"]
+        "channel": "stable",
+        "value": [
+          "1.4.4"
+        ]
       }
     },
     {
@@ -14,31 +16,49 @@
       "skill": {
         "channel": "stable",
         "name": "chef-gohai",
-        "value": ["1.0.1"]
+        "value": [
+          "1.0.3"
+        ]
       }
     },
     {
       "action": "add",
       "skill": {
-        "channel": "stable",
         "name": "shell-interpreter",
-        "value": ["1.0.2"]
+        "channel": "stable",
+        "value": [
+          "1.0.3"
+        ]
       }
     },
     {
       "action": "add",
       "skill": {
+        "name": "inspec-interpreter",
         "channel": "stable",
+        "value": [
+          "1.0.4"
+        ]
+      }
+    },
+    {
+      "action": "add",
+      "skill": {
         "name": "restart-interpreter",
-        "value": ["1.0.1"]
+        "channel": "stable",
+        "value": [
+          "1.0.2"
+        ]
       }
     },
     {
       "action": "add",
       "skill": {
-        "channel": "stable",
         "name": "chef-client-interpreter",
-        "value": ["1.0.3"]
+        "channel": "stable",
+        "value": [
+          "1.0.4"
+        ]
       }
     }
   ]
