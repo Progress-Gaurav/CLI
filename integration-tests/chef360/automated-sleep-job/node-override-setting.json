@@ -1,5 +1,5 @@
 {
-  "name":"sample-node-setting26",
+  "name":"sample-node-setting",
   "skills":[
     {
       "skillName":"chef-gohai",
@@ -7,6 +7,18 @@
         {
           "name":"log_level",
           "value":"debug"
+        },
+        {
+          "name":"log_file_path",
+          "value":"/hab/svc/chef-gohai/logs/logs.log"
+        },
+        {
+          "name":"log_to_file",
+          "value": true
+        },
+        {
+          "name":"log_to_stdout",
+          "value": false
         }
       ]
     },
