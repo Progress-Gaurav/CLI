@@ -85,8 +85,12 @@ def test_node_override_settings():
  
  
 COHORT_ID=""
-def test_cohort():
+def test_cohort(get_env_variables):
     #19-creating cohort(A) and storing the cohort id(A)
+    pem_key=get_env_variables["PEM_KEY"]
+    node_fqdn=get_env_variables["NODE_FQDN"]
+    node_username=get_env_variables["NODE_USERNAME"]
+    node_port=get_env_variables["NODE_PORT"]
     cohort=subprocess.run(f"chef-node-management-cli management cohort create-cohort --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/node-cohort.json --profile node-manager",shell=True, capture_output=True)
     assert cohort.returncode==0
     res3=json.loads(cohort.stdout)
@@ -95,29 +99,14 @@ def test_cohort():
     with open('/home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/enroll-linux.json', 'r') as file:
         change = json.load(file)
         change["cohortId"]=COHORT_ID
+        change["url"]=node_fqdn
+        change["sshCredentials"]["username"]=node_username
+        change["sshCredentials"]["key"]=pem_key
+        change["sshCredentials"]["port"]=node_port
     with open('/home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/enroll-linux.json', 'w') as file:
         json.dump(change, file, indent=4)
     
  
- 
-# def test_get_key():
-#     path="/home/ubuntu/ImportantFiles"
-#     keyname="chef-360-demo.pem"
-#     command="awk \'NF {sub(/\r/, \"\"); printf \"%s\\n\",$0;}\' "+keyname
- 
-#     keyextract=subprocess.run(command,shell=True,cwd=path,capture_output=True)
-#     key=keyextract.stdout
-#     regular_string = key.decode('utf-8')
-#     print(key)
-#     key1=key[0]
-#     print(keyextract.stdout)
-#     print(key1)
- 
-#     with open('/Users/hbiju/Desktop/sample-enrollfile.json', 'r') as file:
-#             config = json.load(file)
-#             config["sshCredentials"]["key"]=regular_string
-#     with open('/Users/hbiju/Desktop/sample-enrollfile.json', 'w') as file:
-#             json.dump(config, file, indent=4)
             
 NODE_ID=""
 def test_Node_enroll():
