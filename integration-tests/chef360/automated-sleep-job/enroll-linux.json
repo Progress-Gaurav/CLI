@@ -1,9 +1,9 @@
 {
     "cohortId": "d20a6e49-f4f6-4e97-bbdb-255f57e73413",
-    "url": "ec2-3-87-238-246.compute-1.amazonaws.com",
+    "url": "",
     "sshCredentials": {
         "username": "ubuntu",
-        "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAwuA+UBfT1oZZVqqUDHQTIIyie1mnmgDZWdfIUNm4u6JKxfPT\n5KxOpLrSJ0thELFikcP3N9JD5Nfu4SnqhIMD5Bfw1vdkchc2xUSeTgRUiLZJK7uw\nrX/0D+IPIAmRW7yJWhzX5SjF3nduWaF08UfciHl2IgfjE/HA3qjKiVaKnXZ6PoSx\nX4PpInIl8yhyFDNs2cUKP+ev3Oufnj/Sw82AT+tnAyxzHohPDr2p1itjqzkKPx7O\nArW2NHuXAE9wzZAquD+HmWJJ6XqtuRW6vP67Wk8DvVWsDqjORSccCGqIiscUiVBT\n1YXlP4rhpT0fCdEsKqHsuxDXnvXrn+c3o3ag/QIDAQABAoIBADPHKydSvWlhdvlN\nB1sruC1M0JsfniWQFjAF4maBAtFv9JgWCfXXRmoEbXQdViP+TadXPydoybtTGFhh\nL7uXqAAB0G79eoXJ3zaY3cry4ZcVf+mLzAy9U5aoxMYJZMLQHFqCEWcE51YNu5c7\nC/xT0Ke+RgISwGX7NPi0NmQ5R0lAytu6MWZXY40w+zpEnxI7EP9T2N3cYHaK6kqA\nbthvJopiOVgKMDdOqADXudbphdKuBlfkWWuWxHuxhIM+SHroit4zkx/bf2HmBKi7\neV4/bGjpaqeGsQrllf5p91Yjn7q57lLYt/iVMkmD+G8brCqz51h4ECzRkm0YgYg9\noRTu2cECgYEA/fwsYcDSVXeK4gbb4Dh7HMN9i5wRz2vBpO5dKyTwq2tR0Gd3FFnH\nX7dPexOozLRBeV8QArLiPe9KpANo5tPkSiu/FRW/I1HEZsWFSFa6KXWYSJ5cDJxf\nBdJaP+HM1fm/hrHAge7nW7tEzEis9U21JOIL7S2WzEF20dJsXQIiCS0CgYEAxGwF\n/pscDD34kCH95Wy4bVZpAvlScGqlRRJCG4fH9KQE3s3gnmPbXSuYEoXy2wBCv/dC\n83pIHJlBWmrmv7T/5oG7zs4MR18a0EiF7weQFSjbyRaiWG3D/Bwtu51RWo6nIAni\njIEs5S+PG3nvfAs7l5qwTgRjMcVV1rU/yu9tORECgYEA6ZatctIWIAirsKlCO3t2\nrsOUiXvmXW/rTrby9SUqO12ehx9BQ3Q2i29aKAWyr2Hw/aFSZkkDDpcvfJyuM+0Y\n/qYxPUEc42zmRubOZ/Nrj4nZnqAWZHrEYeROoIYZD4p8fXKpbFa+bX1UDtWgTJNF\nUECdW2scT4q9rsfqZbf6eZkCgYB3cCRZBKKSgyBhLHpCBtFCkxe52jeZ6g9jJ84R\nBYi+JvpbLR9X0Oq0Be0r3k2lg8wTBNyuRv4QfdRykayMiBhPZzX3c+2dfKRGYMMo\nbRXc+AJljaDcWqqg49WfTvMIONRBNCGRRH8zQa8oiwXoDMCI2GQ6nIpg2lju/Tm0\nQdDNsQKBgQDoPPmS1lgM64q3tLXjLT8ZTOo7FSZ/HLiTtoOFlNyst6j6OGcJKeDP\nK8tH+yI5OPNJn4L4kZU+VhGh4nSwnIjga2tkZf8SvqimaEafB2H+mXKN6LNBrxgF\nmgmDWrw9ETOSr/cs/q9AkXBz+raek+j3CwK3uO4c1ANI4OIVeBy8fg==\n-----END RSA PRIVATE KEY-----\n",
+        "key": "",
         "port": 22
     }
 }
