@@ -1,5 +1,5 @@
 {
-    "name": "a simple job to perform one action26",
+    "name": "a simple job to perform one action234",
     "description": "Perform a simple shell command on specific nodes to understand the fundamentals of Courier jobs",
     "scheduleRule": "immediate",
     "exceptionRules": [],
@@ -8,7 +8,10 @@
         "groups": [
             {
                 "timeoutSeconds": 240,
-                "batchSize": {},
+                "batchSize": {
+                    "type": "percent",
+                    "value": 100
+                },
                 "distributionMethod": "batching",
                 "successCriteria": [
                     {
@@ -21,7 +24,7 @@
                 ],
                 "nodeListType": "nodes",
                 "nodeIdentifiers": [
-                    "105e3505-6a32-43c4-acb2-2a996947d471"
+                    "7aa20296-cff5-4799-8ccd-986ef0123553"
                 ]
             }
         ]

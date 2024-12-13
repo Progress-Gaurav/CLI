@@ -3,7 +3,7 @@ import time
 import logging
 import os
 import platform
-
+ 
 
 def test_skill_agent():
     # 15-register node management agent
@@ -17,7 +17,7 @@ def test_skill_agent():
     assert res["code"]== 200, "error"
  
  
-    # 16-defining all the skills(A) and verifying skills(A)
+# 16-defining all the skills(A) and verifying skills(A)
 def test_install_skills():
     #courier-runner-skill
     skill1 = subprocess.run(f"chef-node-management-cli management skill create-skill --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/courier-runner-skill.json --profile node-manager",shell=True, capture_output=True)
@@ -92,24 +92,24 @@ def test_cohort():
     
  
  
-def test_get_key():
-    path="/home/ubuntu/ImportantFiles"
-    keyname="chef-360-demo.pem"
-    command="awk \'NF {sub(/\r/, \"\"); printf \"%s\\n\",$0;}\' "+keyname
+# def test_get_key():
+#     path="/home/ubuntu/ImportantFiles"
+#     keyname="chef-360-demo.pem"
+#     command="awk \'NF {sub(/\r/, \"\"); printf \"%s\\n\",$0;}\' "+keyname
  
-    keyextract=subprocess.run(command,shell=True,cwd=path,capture_output=True)
-    key=keyextract.stdout
-    regular_string = key.decode('utf-8')
-    print(key)
-    key1=key[0]
-    print(keyextract.stdout)
-    print(key1)
+#     keyextract=subprocess.run(command,shell=True,cwd=path,capture_output=True)
+#     key=keyextract.stdout
+#     regular_string = key.decode('utf-8')
+#     print(key)
+#     key1=key[0]
+#     print(keyextract.stdout)
+#     print(key1)
  
-    with open('/Users/hbiju/Desktop/sample-enrollfile.json', 'r') as file:
-            config = json.load(file)
-            config["sshCredentials"]["key"]=regular_string
-    with open('/Users/hbiju/Desktop/sample-enrollfile.json', 'w') as file:
-            json.dump(config, file, indent=4)
+#     with open('/Users/hbiju/Desktop/sample-enrollfile.json', 'r') as file:
+#             config = json.load(file)
+#             config["sshCredentials"]["key"]=regular_string
+#     with open('/Users/hbiju/Desktop/sample-enrollfile.json', 'w') as file:
+#             json.dump(config, file, indent=4)
             
 NODE_ID=""
 def test_Node_enroll():
@@ -137,27 +137,25 @@ def test_job():
     global JOB_ID
     JOB_ID=res5["item"]["id"]
     print(JOB_ID)
-    time.sleep(30)
+    time.sleep(10)
  
   
  
-# def test_get_instance():
-#     result1=subprocess.run(['chef-courier-cli','state','instance','list-all','--job-id',JOB_ID],capture_output=True,text=True)
-#     res6=json.loads(result1.stdout)
-#     print(res6)
-#     instance=res6["items"][0]['id']
-#     print(instance)
-
-#     result2=subprocess.run(['chef-courier-cli','state','instance','list-instance-runs','--instanceId',instance],capture_output=True,text=True)
-#     res7=json.loads(result2.stdout)
-#     runid=res7["items"][0]["runId"]
-#     print(res7)
-#     print(runid)
+def test_get_instance():
+    result1=subprocess.run(f"chef-courier-cli state instance list-all --job-id {JOB_ID} --profile courier-operator",shell=True,capture_output=True)
+    res6=json.loads(result1.stdout)
+    print(res6)
+    instance=res6["items"][0]['id']
+    print(instance)
  
-#     result3=subprocess.run(['chef-courier-cli','state','run','list-steps','--runId',runid],capture_output=True,text=True)
-#     print(result3.stdout)
-#     res8=json.loads(result3.stdout)
+    result2=subprocess.run(f"chef-courier-cli state instance list-instance-runs --instanceId {instance} --profile courier-operator ",shell=True,capture_output=True)
+    res7=json.loads(result2.stdout)
+    runid=res7["items"][0]["runId"]
+    print(res7)
+    print(runid)
  
-#     print(res8)
-#     # final=any(item["status"]=="success" for item in res8["items"])
-#     # assert final,"Job instance run failed!"
+    result3=subprocess.run(f"chef-courier-cli state run list-steps --runId {runid}  --profile courier-operator",shell=True,capture_output=True)
+    print(result3.stdout)
+    res8=json.loads(result3.stdout)
+ 
+    print(res8)

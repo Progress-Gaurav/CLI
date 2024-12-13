@@ -1,50 +1,25 @@
 <?xml version='1.0' encoding='utf-8'?>
-<testsuites><testsuite name="integration-tests.chef360.HELM_test.Chef360 Helm deployment" tests="1" errors="0" failures="1" skipped="0" time="0.014"><testcase name="test_set_access_keys" classname="integration-tests.chef360.HELM_test.Chef360 Helm deployment" time="0.007"><failure message="AttributeError: 'str' object has no attribute 'close'">get_env_variables = {'AWS_ACCESS_KEY_ID': 'dffgsfgs', 'AWS_SECRET_ACCESS_KEY': 'sdfgdsfgg', 'AWS_SESSION_TOKEN': 'eqertythfdhg', 'FQDN': 'default4', ...}
+<testsuites><testsuite name="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" tests="9" errors="0" failures="1" skipped="0" time="16.929"><testcase name="test_skill_agent" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="1.421" /><testcase name="test_install_skills" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="1.677" /><testcase name="test_find_all_skills" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.171" /><testcase name="test_skill_assembly" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.176" /><testcase name="test_node_override_settings" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.175" /><testcase name="test_cohort" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.183" /><testcase name="test_Node_enroll" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.311" /><testcase name="test_job" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="11.443" /><testcase name="test_get_instance" classname="integration-tests.chef360.automated-sleep-job.test_sleep_job_automate" time="0.686"><failure message="AssertionError: Job instance run failed!&#10;assert False">def test_get_instance():
+        result1=subprocess.run(f"chef-courier-cli state instance list-all --job-id {JOB_ID} --profile courier-operator",shell=True,capture_output=True)
+        res6=json.loads(result1.stdout)
+        print(res6)
+        instance=res6["items"][0]['id']
+        print(instance)
+    
+        result2=subprocess.run(f"chef-courier-cli state instance list-instance-runs --instanceId {instance} --profile courier-operator ",shell=True,capture_output=True)
+        res7=json.loads(result2.stdout)
+        runid=res7["items"][0]["runId"]
+        print(res7)
+        print(runid)
+    
+        result3=subprocess.run(f"chef-courier-cli state run list-steps --runId {runid}  --profile courier-operator",shell=True,capture_output=True)
+        print(result3.stdout)
+        res8=json.loads(result3.stdout)
+    
+        print(res8)
+        final=any(item["status"]=="success" for item in res8["items"])
+&gt;       assert final,"Job instance run failed!"
+E       AssertionError: Job instance run failed!
+E       assert False
 
-    def test_set_access_keys(get_env_variables):
-        print("\n",20, " Configuring AWS credentials")
-    
-        # Fetch environment variables
-        AWS_ACCESS_KEY_ID = get_env_variables["AWS_ACCESS_KEY_ID"]
-        AWS_SECRET_ACCESS_KEY = get_env_variables["AWS_SECRET_ACCESS_KEY"]
-        AWS_SESSION_TOKEN = get_env_variables["AWS_SESSION_TOKEN"]
-    
-        complete_path=os.path.expanduser("~/")
-        print(complete_path)
-        create_aws_directory="mkdir -p "+complete_path+".aws"
-        create_directory=subprocess.run(create_aws_directory,shell=True,capture_output=True)
-        print(create_directory.stdout)
-        assert create_directory.returncode==0 ,"fail to create a directory .aws"
-    
-    
-        # AWS credentials file path
-        credentials_file = complete_path+".aws/credentials"
-        print(credentials_file)
-    
-        #  Create config parser for credentials file
-        credentials = ConfigParser()
-        credentials.read(credentials_file)
-    
-        # Set credentials under the default profile
-        if not credentials.has_section('default'):
-            credentials.add_section('default')
-    
-        credentials.set('default', 'aws_access_key_id', AWS_ACCESS_KEY_ID)
-        credentials.set('default', 'aws_secret_access_key', AWS_SECRET_ACCESS_KEY)
-        credentials.set('default', 'aws_session_token', AWS_SESSION_TOKEN)
-    
-        # Write the updated credentials file
-        with open(credentials_file, 'w') as filedata:
-            credentials.write(filedata)
-        print("AWS credentials and config files have been updated.")
-    
-        assert (
-            credentials.get('default', 'aws_access_key_id') == AWS_ACCESS_KEY_ID and
-            credentials.get('default', 'aws_secret_access_key') == AWS_SECRET_ACCESS_KEY and
-            credentials.get('default', 'aws_session_token') == AWS_SESSION_TOKEN
-        ), "AWS credentials are not set correctly in the file."
-        print("closing the file")
-&gt;       credentials_file.close()
-E       AttributeError: 'str' object has no attribute 'close'
-
-integration-tests/chef360/HELM_test/Chef360 Helm deployment.py:269: AttributeError</failure></testcase></testsuite></testsuites>
+integration-tests/chef360/automated-sleep-job/test_sleep_job_automate.py:163: AssertionError</failure></testcase></testsuite></testsuites>
