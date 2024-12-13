@@ -3,7 +3,15 @@ import time
 import logging
 import os
 import platform
- 
+
+
+def test_add_license(get_env_variables):
+    license_id=get_env_variables["LICENSE_ID"]
+    load_license = subprocess.run(f"chef-platform-auth-cli license-management license load-license --body '{"licenseId": {license_id}}'", shell=True,capture_output=True)
+    assert load_license.returncode == 0
+    res= json.loads(load_license.stdout)
+    print(res)
+
 
 def test_skill_agent():
     # 15-register node management agent
