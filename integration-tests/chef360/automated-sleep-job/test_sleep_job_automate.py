@@ -92,6 +92,7 @@ def test_cohort(get_env_variables):
     node_fqdn=get_env_variables["NODE_FQDN"]
     node_username=get_env_variables["NODE_USERNAME"]
     node_port=get_env_variables["NODE_PORT"]
+    pem_key=pem_key.replace("\\n", "\n")
     cohort=subprocess.run(f"chef-node-management-cli management cohort create-cohort --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/node-cohort.json --profile node-manager",shell=True, capture_output=True)
     assert cohort.returncode==0
     res3=json.loads(cohort.stdout)
