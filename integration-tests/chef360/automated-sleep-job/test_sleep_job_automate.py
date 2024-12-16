@@ -5,25 +5,25 @@ import os
 import platform
 
 
-def test_add_license(get_env_variables):
+def test_load_license(get_env_variables):
     license_id=get_env_variables["LICENSE_ID"]
-    cmd="chef-platform-auth-cli license-management license load-license --body '{\"licenseId\": \""+license_id+"\"}'"
-    load_license = subprocess.run(cmd, shell=True,capture_output=True)
+    cmd_to_load_license="chef-platform-auth-cli license-management license load-license --body '{\"licenseId\": \""+license_id+"\"}'"
+    load_license = subprocess.run(cmd_to_load_license, shell=True,capture_output=True)
     assert load_license.returncode == 0
-    res= json.loads(load_license.stdout)
-    print(res)
+    load_license_result= json.loads(load_license.stdout)
+    print(load_license_result)
 
 
-def test_skill_agent():
+def test_register_skill_agent():
     # 15-register node management agent
     #               >create a json file(A)
     #               >create the skill agent(A)
  
-    skill_agent = subprocess.run(f"chef-node-management-cli management skill update-agent --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/register-agent-skill.json --profile node-manager", shell=True,capture_output=True)
-    assert skill_agent.returncode == 0
-    res= json.loads(skill_agent.stdout)
+    skill_agent_registration = subprocess.run(f"chef-node-management-cli management skill update-agent --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/register-agent-skill.json --profile node-manager", shell=True,capture_output=True)
+    assert skill_agent_registration.returncode == 0
+    skill_agent_result= json.loads(skill_agent_registration.stdout)
     # print(res)
-    assert res["code"]== 200, "error"
+    assert skill_agent_result["code"]== 200, "error"
  
  
 # 16-defining all the skills(A) and verifying skills(A)
@@ -52,15 +52,15 @@ def test_find_all_skills():
     print("\n\n_________________All the skills are successfully installed_________________________")
     assert skill_agent.returncode == 0
  
+
 skillAssemblyID=""
- 
 def test_skill_assembly():
     # 17-defining the skill assembly(A) but changing the version (M/A){if the version are stable then its A otherwise M}. storing skillasssembly id(A)
-    assembly = subprocess.run(f"chef-node-management-cli management assembly create-assembly --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/skill-assembly.json --profile node-manager",shell=True, capture_output=True)
-    assert assembly.returncode == 0
-    res1= json.loads(assembly.stdout)
-    print(res1)
-    skillAssemblyID = res1["item"]["skillAssemblyId"]
+    skill_assembly = subprocess.run(f"chef-node-management-cli management assembly create-assembly --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/skill-assembly.json --profile node-manager",shell=True, capture_output=True)
+    assert skill_assembly.returncode == 0
+    skill_assembly_result= json.loads(skill_assembly.stdout)
+    print(skill_assembly_result)
+    skillAssemblyID = skill_assembly_result["item"]["skillAssemblyId"]
     with open('/home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/node-cohort.json', 'r') as file:
         config = json.load(file)
         config["skillAssemblyId"]=skillAssemblyID
@@ -72,11 +72,11 @@ def test_skill_assembly():
 SETTING_ID=""
 def test_node_override_settings():
     #18- create override settings(A)and storing the settingId(A)
-    override=subprocess.run(f"chef-node-management-cli management setting create-setting --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/node-override-setting.json --profile node-manager",shell=True, capture_output=True)
-    assert override.returncode == 0
-    res2= json.loads(override.stdout)
-    print(res2)
-    SETTING_ID= res2["item"]["settingId"]
+    override_settings=subprocess.run(f"chef-node-management-cli management setting create-setting --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/node-override-setting.json --profile node-manager",shell=True, capture_output=True)
+    assert override_settings.returncode == 0
+    override_settings_result= json.loads(override_settings.stdout)
+    print(override_settings_result)
+    SETTING_ID= override_settings_result["item"]["settingId"]
     with open('/home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/node-cohort.json', 'r') as file:
         config = json.load(file)
         config["settingId"] = SETTING_ID
@@ -95,9 +95,9 @@ def test_cohort(get_env_variables):
     pem_key=pem_key.replace("\\n", "\n")
     cohort=subprocess.run(f"chef-node-management-cli management cohort create-cohort --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/node-cohort.json --profile node-manager",shell=True, capture_output=True)
     assert cohort.returncode==0
-    res3=json.loads(cohort.stdout)
-    print(res3)
-    COHORT_ID=res3["item"]["cohortId"]
+    cohort_result=json.loads(cohort.stdout)
+    print(cohort_result)
+    COHORT_ID=cohort_result["item"]["cohortId"]
     with open('/home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/enroll-linux.json', 'r') as file:
         change = json.load(file)
         change["cohortId"]=COHORT_ID
@@ -113,11 +113,11 @@ def test_cohort(get_env_variables):
 NODE_ID=""
 def test_Node_enroll():
     #20-node enrollment(M)
-    enroll=subprocess.run(f"chef-node-management-cli enrollment enroll-node --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/enroll-linux.json --profile node-manager",shell=True,capture_output=True)
-    assert enroll.returncode==0
-    res4=json.loads(enroll.stdout)
-    print(res4)
-    NODE_ID=res4["item"]["nodeId"]
+    enroll_node=subprocess.run(f"chef-node-management-cli enrollment enroll-node --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/enroll-linux.json --profile node-manager",shell=True,capture_output=True)
+    assert enroll_node.returncode==0
+    node_enrollment_result=json.loads(enroll_node.stdout)
+    print(node_enrollment_result)
+    NODE_ID=node_enrollment_result["item"]["nodeId"]
     with open('/home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/create-job-simple.json', 'r') as file:
         job_config = json.load(file)
         job_config["target"]["groups"][0]["nodeIdentifiers"] = [NODE_ID]
@@ -131,30 +131,30 @@ def test_job():
     #21-creating a job(A)and getting jobId(A)
     job_run=subprocess.run(f"chef-courier-cli scheduler jobs add-job --body-file /home/ubuntu/CLI/integration-tests/chef360/automated-sleep-job/create-job-simple.json --profile courier-operator",shell=True,capture_output=True)
     assert job_run.returncode==0
-    res5=json.loads(job_run.stdout)
-    print(res5)
+    job_run_result=json.loads(job_run.stdout)
+    print(job_run_result)
     global JOB_ID
-    JOB_ID=res5["item"]["id"]
+    JOB_ID=job_run_result["item"]["id"]
     print(JOB_ID)
     time.sleep(10)
  
   
  
 def test_get_instance():
-    result1=subprocess.run(f"chef-courier-cli state instance list-all --job-id {JOB_ID} --profile courier-operator",shell=True,capture_output=True)
-    res6=json.loads(result1.stdout)
-    print(res6)
-    instance=res6["items"][0]['id']
+    job_instance=subprocess.run(f"chef-courier-cli state instance list-all --job-id {JOB_ID} --profile courier-operator",shell=True,capture_output=True)
+    job_instance_result=json.loads(job_instance.stdout)
+    print(job_instance_result)
+    instance=job_instance_result["items"][0]['id']
     print(instance)
  
-    result2=subprocess.run(f"chef-courier-cli state instance list-instance-runs --instanceId {instance} --profile courier-operator ",shell=True,capture_output=True)
-    res7=json.loads(result2.stdout)
-    runid=res7["items"][0]["runId"]
-    print(res7)
+    list_instance_runs=subprocess.run(f"chef-courier-cli state instance list-instance-runs --instanceId {instance} --profile courier-operator ",shell=True,capture_output=True)
+    runs_list=json.loads(list_instance_runs.stdout)
+    runid=runs_list["items"][0]["runId"]
+    print(runs_list)
     print(runid)
  
-    result3=subprocess.run(f"chef-courier-cli state run list-steps --runId {runid}  --profile courier-operator",shell=True,capture_output=True)
-    print(result3.stdout)
-    res8=json.loads(result3.stdout)
+    lists_run_steps=subprocess.run(f"chef-courier-cli state run list-steps --runId {runid}  --profile courier-operator",shell=True,capture_output=True)
+    print(lists_run_steps.stdout)
+    run_steps=json.loads(lists_run_steps.stdout)
  
-    print(res8)
+    print(run_steps)
