@@ -7,7 +7,7 @@ import platform
 
 def test_load_license(get_env_variables):
     license_id=get_env_variables["LICENSE_ID"]
-    cmd_to_load_license="chef-platform-auth-cli license-management license load-license --body '{\"licenseId\": \""+license_id+"\"}'"
+    cmd_to_load_license="chef-platform-auth-cli license-management license load-license --body '{\"licenseId\": \""+license_id+"\"}' --profile tenant-admin"
     load_license = subprocess.run(cmd_to_load_license, shell=True,capture_output=True)
     assert load_license.returncode == 0
     load_license_result= json.loads(load_license.stdout)
