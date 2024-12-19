@@ -3,7 +3,6 @@ import time
 import logging
 import os
 import platform
-import emoji
  
 path=""
  
