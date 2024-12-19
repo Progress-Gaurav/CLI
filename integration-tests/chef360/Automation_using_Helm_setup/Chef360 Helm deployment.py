@@ -84,14 +84,14 @@ def starting_docker_on_ubuntu():
 
 #If on RHEL, Centos or Amazon Linux:
 def update_linux():
-        print("\n",5,"(A) Updates the package list using the apt package manager.")
+        print("\n",5,"(A) Updates the package list using the yum package manager.")
         linux_update=subprocess.run(f"sudo yum update -y",shell=True,capture_output=True)
         print(linux_update.stdout)
         assert linux_update.returncode==0
 
 
 def install_docker_on_linux():
-        print("\n",5,"(B) Starts the Docker service.")
+        print("\n",5,"(B) Installs Docker via the yum package manager")
         install_docker=subprocess.run(f"sudo yum install docker -y",shell=True,capture_output=True)
         print(install_docker.stdout)
         assert install_docker.returncode==0
