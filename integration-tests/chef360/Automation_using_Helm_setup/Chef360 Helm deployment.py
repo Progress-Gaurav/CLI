@@ -3,7 +3,23 @@ import time
 import os
 from configparser import ConfigParser
 import platform
- 
+
+current_os=""
+current_system=""
+def test_check_system():
+      global current_os
+      current_os= platform.system()
+      global current_system
+      if current_os == "Linux":
+        with open("/etc/os-release") as file_data:
+            os_info = file_data.read()
+
+            if "Ubuntu" in os_info:
+                current_system="ubuntu"
+            else:
+                current_system="linux"
+
+
 # #### Helm Setup
 # curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 def test_download_helm_binary():
@@ -90,28 +106,21 @@ def start_docker_on_linux():
 
 def add_user_linux():
         print("\n",5,"(D) Adds the current user to the docker group.")
-        add_user=subprocess.run(f"sudo usermod -aG docker $USER && newgrp docker",shell=True,capture_output=True)
+        add_user=subprocess.run(f"sudo usermod -aG docker $USER",shell=True,capture_output=True)
         print(add_user.stdout)
         assert add_user.returncode==0
 
 
 def test_install_docker():
-    current_os = platform.system()
-    print(current_os)
-    
-    if current_os == "Linux":
-        with open("/etc/os-release") as file_data:
-                os_info = file_data.read()
-
-                if "Ubuntu" in os_info:
-                      update_ubuntu()
-                      install_docker_on_ubuntu()
-                      starting_docker_on_ubuntu()
-                else:
-                      update_linux()
-                      install_docker_on_linux()
-                      start_docker_on_linux()
-                      add_user_linux()     
+    if current_system == "ubuntu":       
+        update_ubuntu()
+        install_docker_on_ubuntu()
+        starting_docker_on_ubuntu()
+    elif current_system =="linux":
+        update_linux()
+        install_docker_on_linux()
+        start_docker_on_linux()
+        add_user_linux()     
     elif current_os == "Windows":
         print("Not supported")
     else:
@@ -166,7 +175,10 @@ def test_move_kubernetes():
 # # kubectl version
 def test_kubernetes_version_check():
         print("\n",11, " Verifies the installation and displays the kubectl version")
-        kubernetes_version=subprocess.run(f"sudo kubectl version",shell=True,capture_output=True)
+        cmd_to_check_version= "kubectl version"
+        if current_system == "ubuntu":
+              cmd_to_check_version= "sudo "+ cmd_to_check_version
+        kubernetes_version=subprocess.run(cmd_to_check_version,shell=True,capture_output=True)
         print(kubernetes_version.stdout)
         assert b'Version:' in kubernetes_version.stdout
 
@@ -192,7 +204,10 @@ def test_install_minikube():
 # minikube version
 def test_minikube_version():
         print("\n",14," Verifies the installation and displays the Minikube version")
-        minikube_version=subprocess.run(f"sudo minikube version",shell=True,capture_output=True)
+        cmd_to_check_version="minikube version"
+        if current_system == "ubuntu":
+            cmd_to_check_version= "sudo "+ cmd_to_check_version
+        minikube_version=subprocess.run(cmd_to_check_version,shell=True,capture_output=True)
         print(minikube_version.stdout)
         assert  b'version' in minikube_version.stdout.lower(), "no version found" 
 
@@ -200,7 +215,10 @@ def test_minikube_version():
 # minikube start --force
 def test_minikube_start():
         print("\n",15," Starts a Minikube cluster.")
-        start_minikube=subprocess.run(f"sudo minikube start --force",shell=True,capture_output=True)
+        cmd_to_start_minikube= "sudo minikube start --force"
+        if current_system == "linux":
+              cmd_to_start_minikube= "sg docker -c \"minikube start --force\""
+        start_minikube=subprocess.run(cmd_to_start_minikube,shell=True,capture_output=True)
         time.sleep(20)
         print(start_minikube.stdout)
         assert start_minikube.returncode==0
@@ -210,7 +228,10 @@ def test_minikube_start():
 # # minikube status
 def test_minikube_status():
         print("\n",16, " Displays the status of the Minikube cluster (e.g., whether it's running).")
-        minikube_status=subprocess.run(f"sudo minikube status",shell=True,capture_output=True)
+        cmd_to_check_minikube_status= "sudo minikube status"
+        if current_system == "linux":
+              cmd_to_check_minikube_status= "sg docker -c \"minikube status\""
+        minikube_status=subprocess.run(cmd_to_check_minikube_status,shell=True,capture_output=True)
         print(minikube_status.stdout)
         assert minikube_status.returncode==0
 
@@ -219,7 +240,10 @@ def test_minikube_status():
 # yes \"y\" | sudo apt install awscli
 def test_install_awscli():
         print("\n",17, " Install AWSCLIs")
-        awscli=subprocess.run(f"yes \"y\" | sudo apt install awscli",shell=True,capture_output=True)
+        cmd_to_install_awscli="yes \"y\" | sudo apt install awscli"
+        if current_system == "linux":
+            cmd_to_install_awscli="yes \"y\" | sudo yum install awscli"
+        awscli=subprocess.run(cmd_to_install_awscli,shell=True,capture_output=True)
         print( awscli.stdout)
         assert  awscli.returncode==0
 
@@ -277,7 +301,10 @@ def test_awscli_version_check():
 # kubectl create secret docker-registry regcred  --docker-server=448877188565.dkr.ecr.us-east-2.amazonaws.com   --docker-username=AWS   --docker-password=$(aws ecr get-login-password --region us-east-2)
 def test_create_image_secret():
     print("\n",20, " The command creates a Kubernetes secret (regcred) to store credentials for authenticating with an Amazon Elastic Container Registry (ECR). This allows Kubernetes to securely pull private container images from the specified ECR repository.")
-    create_image=subprocess.run(f"sudo kubectl create secret docker-registry regcred  --docker-server=448877188565.dkr.ecr.us-east-2.amazonaws.com   --docker-username=AWS   --docker-password=$(aws ecr get-login-password --region us-east-2)",shell=True,capture_output=True)
+    cmd_to_create_image="kubectl create secret docker-registry regcred  --docker-server=448877188565.dkr.ecr.us-east-2.amazonaws.com   --docker-username=AWS   --docker-password=$(aws ecr get-login-password --region us-east-2)"
+    if current_system== "ubuntu":
+          cmd_to_create_image= "sudo "+ cmd_to_create_image
+    create_image=subprocess.run(cmd_to_create_image,shell=True,capture_output=True)
     print(create_image.stdout)
     assert create_image.returncode==0
  
@@ -285,7 +312,10 @@ def test_create_image_secret():
 #sudo apt install git -y
 def test_install_git():
     print("\n",21, " Installing Git")
-    git_installation=subprocess.run(f"sudo apt install git -y",shell=True,capture_output=True)
+    cmd_to_install_git= "sudo apt install git -y"
+    if current_system== "linux":
+          cmd_to_install_git="sudo yum install git -y"
+    git_installation=subprocess.run(cmd_to_install_git,shell=True,capture_output=True)
     print(git_installation.stdout)
     assert git_installation.returncode==0
  
@@ -315,7 +345,10 @@ def test_change_tenant_fqdn(get_env_variables):
 def test_install_chef_platform():
     print("\n",24, " Installing chef platform")
     path_to_install_chef= os.path.expanduser("helm/chef-platform")
-    chef_installation=subprocess.run(f"sudo helm install chef-platform .",shell=True,capture_output=True, cwd=path_to_install_chef)
+    cmd_to_install_chef="helm install chef-platform ."
+    if current_system== "ubuntu":
+          cmd_to_install_chef= "sudo "+ cmd_to_install_chef
+    chef_installation=subprocess.run(cmd_to_install_chef,shell=True,capture_output=True, cwd=path_to_install_chef)
     print( chef_installation.stdout)
     assert  chef_installation.returncode==0
 
@@ -323,7 +356,9 @@ def test_install_chef_platform():
 def test_mailpit_port_exposure(get_env_variables):
     port_for_mailpit=get_env_variables["PORT_FOR_MAILPIT"]
     print("\n",25, " This command runs kubectl port-forward in the background (using nohup) to expose the mailpit service in the default namespace on localhost and all network interfaces (0.0.0.0), mapping port 31100 to 8025")
-    command_for_port_forwarding = "sudo nohup kubectl port-forward --namespace default service/mailpit --address 0.0.0.0 "+port_for_mailpit+":8025 &"
+    command_for_port_forwarding = "nohup kubectl port-forward --namespace default service/mailpit --address 0.0.0.0 "+port_for_mailpit+":8025 &"
+    if current_system== "ubuntu":
+          command_for_port_forwarding= "sudo "+command_for_port_forwarding
     process = subprocess.Popen(command_for_port_forwarding, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Wait for a moment to ensure the process starts
@@ -333,7 +368,9 @@ def test_mailpit_port_exposure(get_env_variables):
 def test_reverse_proxy(get_env_variables):
     port_for_nginx_reverse_proxy=get_env_variables["PORT_FOR_NGINX_REVERSE_PROXY"]
     print("\n",26," This command runs kubectl port-forward in the background (using nohup) to expose the nginx-reverse-proxy service in the default namespace on all network interfaces (0.0.0.0), mapping port 31000 on the host to port 8080 on the service..")
-    command_for_port_forwarding = "sudo nohup kubectl port-forward --namespace default service/nginx-reverse-proxy --address 0.0.0.0 "+port_for_nginx_reverse_proxy+":8080 &"
+    command_for_port_forwarding = "nohup kubectl port-forward --namespace default service/nginx-reverse-proxy --address 0.0.0.0 "+port_for_nginx_reverse_proxy+":8080 &"
+    if current_system== "ubuntu":
+          command_for_port_forwarding= "sudo "+command_for_port_forwarding
     process = subprocess.Popen(command_for_port_forwarding, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Wait for a moment to ensure the process starts
@@ -343,7 +380,9 @@ def test_reverse_proxy(get_env_variables):
 def test_rabbit_mq(get_env_variables):
     port_for_rabbitmq=get_env_variables["PORT_FOR_RABBITMQ"]
     print("\n",27," It forwards local port 31050 to port 5672 of the chef-platform-rabbitmq service in the Kubernetes default namespace, making RabbitMQ accessible externally")
-    command_for_port_forwarding = "sudo nohup kubectl port-forward --namespace default service/chef-platform-rabbitmq --address 0.0.0.0 "+port_for_rabbitmq+":5672 &"
+    command_for_port_forwarding = "nohup kubectl port-forward --namespace default service/chef-platform-rabbitmq --address 0.0.0.0 "+port_for_rabbitmq+":5672 &"
+    if current_system== "ubuntu":
+          command_for_port_forwarding= "sudo "+command_for_port_forwarding
     process = subprocess.Popen(command_for_port_forwarding, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Wait for a moment to ensure the process starts
@@ -352,8 +391,6 @@ def test_rabbit_mq(get_env_variables):
 
 def test_install_cli(get_env_variables):
     print("\n",28," Installing CLI based on the OS")
-    current_os = platform.system()
-    print("\n", current_os)
     FQDN = get_env_variables["FQDN"]
     
     if current_os == "Linux":
@@ -407,10 +444,3 @@ def test_cli_installed():
     checkstatus_node_management_cli=subprocess.run('chef-node-management-cli --help',capture_output=True,shell=True,text=True)
     print(checkstatus_node_management_cli.stdout)
     assert checkstatus_node_management_cli.returncode==0
-
-
-
-
-
-
-
