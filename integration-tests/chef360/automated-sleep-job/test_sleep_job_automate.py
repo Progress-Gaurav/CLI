@@ -19,7 +19,7 @@ def test_check_system_path():
      global path
      path=os.path.expanduser("~/")
      print(path)
-     path+=path+"CLI/integration-tests/chef360/automated-sleep-job/"
+     path+="CLI/integration-tests/chef360/automated-sleep-job/"
  
  
  
