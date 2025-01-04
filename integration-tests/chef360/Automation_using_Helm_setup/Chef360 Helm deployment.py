@@ -344,6 +344,17 @@ class Test_Install_Chef_Platform():
         running_change_fqdn=subprocess.run(change_fqdn,shell=True,capture_output=True)
         print(running_change_fqdn.stdout)
         assert running_change_fqdn.returncode==0
+
+
+    def test_temp_fixtures(self):
+        path_to_config1= "helm/chef-platform/charts/chef-services/charts/platform-services/charts/public-api-gateway/config/config.yaml"
+        fix_error1="sed -i 's/1924905600/1767225599/g' "+path_to_config1
+        fix1= subprocess.run(fix_error1, shell=True,capture_output=True)
+        assert fix1.returncode==0
+        path_to_config2= "helm/chef-platform/charts/chef-services/charts/platform-services/charts/internal-api-gateway/config/config.yaml"
+        fix_error2="sed -i 's/1924905600/1767225599/g' "+path_to_config2
+        fix2= subprocess.run(fix_error2, shell=True,capture_output=True)
+        assert fix2.returncode==0
         
     
     # #sudo helm install chef-platform .
