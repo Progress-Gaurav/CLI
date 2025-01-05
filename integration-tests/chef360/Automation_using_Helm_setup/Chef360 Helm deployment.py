@@ -344,17 +344,6 @@ class Test_Install_Chef_Platform():
         running_change_fqdn=subprocess.run(change_fqdn,shell=True,capture_output=True)
         print(running_change_fqdn.stdout)
         assert running_change_fqdn.returncode==0
-
-
-    def test_temp_fixtures(self):
-        path_to_config1= "helm/chef-platform/charts/chef-services/charts/platform-services/charts/public-api-gateway/config/config.yaml"
-        fix_error1="sed -i 's/1924905600/1767225599/g' "+path_to_config1
-        fix1= subprocess.run(fix_error1, shell=True,capture_output=True)
-        assert fix1.returncode==0
-        path_to_config2= "helm/chef-platform/charts/chef-services/charts/platform-services/charts/internal-api-gateway/config/config.yaml"
-        fix_error2="sed -i 's/1924905600/1767225599/g' "+path_to_config2
-        fix2= subprocess.run(fix_error2, shell=True,capture_output=True)
-        assert fix2.returncode==0
         
     
     # #sudo helm install chef-platform .
@@ -369,11 +358,22 @@ class Test_Install_Chef_Platform():
         assert  chef_installation.returncode==0
 
 
+    def test_temp_fixtures(self):
+        path_to_config1= "helm/chef-platform/charts/chef-services/charts/platform-services/charts/public-api-gateway/config/config.yaml"
+        fix_error1="sed -i 's/1924905600/1767225599/g' "+path_to_config1
+        fix1= subprocess.run(fix_error1, shell=True,capture_output=True)
+        assert fix1.returncode==0
+        path_to_config2= "helm/chef-platform/charts/chef-services/charts/platform-services/charts/internal-api-gateway/config/config.yaml"
+        fix_error2="sed -i 's/1924905600/1767225599/g' "+path_to_config2
+        fix2= subprocess.run(fix_error2, shell=True,capture_output=True)
+        assert fix2.returncode==0
+
+
 @pytest.mark.testcasekey('CHEF-TC-975')
 class Test_Port_Exposure():
     def test_mailpit_port_exposure(self, get_env_variables):
         port_for_mailpit=get_env_variables["PORT_FOR_MAILPIT"]
-        print("\n",25, " This command runs kubectl port-forward in the background (using nohup) to expose the mailpit service in the default namespace on localhost and all network interfaces (0.0.0.0), mapping port 31100 to 8025")
+        print("\n",25, " This command runs kubectl port-forward in the background (using nohup) to expose the mailpit service in the default namespace on localhost and all network interfaces (0.0.0.0), mapping port 31100 to 8025\n")
         command_for_port_forwarding = "nohup kubectl port-forward --namespace default service/mailpit --address 0.0.0.0 "+port_for_mailpit+":8025 &"
         if current_system== "ubuntu":
             command_for_port_forwarding= "sudo "+command_for_port_forwarding
@@ -385,7 +385,7 @@ class Test_Port_Exposure():
 
     def test_reverse_proxy(self, get_env_variables):
         port_for_nginx_reverse_proxy=get_env_variables["PORT_FOR_NGINX_REVERSE_PROXY"]
-        print("\n",26," This command runs kubectl port-forward in the background (using nohup) to expose the nginx-reverse-proxy service in the default namespace on all network interfaces (0.0.0.0), mapping port 31000 on the host to port 8080 on the service..")
+        print("\n",26," This command runs kubectl port-forward in the background (using nohup) to expose the nginx-reverse-proxy service in the default namespace on all network interfaces (0.0.0.0), mapping port 31000 on the host to port 8080 on the service.\n")
         command_for_port_forwarding = "nohup kubectl port-forward --namespace default service/nginx-reverse-proxy --address 0.0.0.0 "+port_for_nginx_reverse_proxy+":8080 &"
         if current_system== "ubuntu":
             command_for_port_forwarding= "sudo "+command_for_port_forwarding
@@ -397,7 +397,7 @@ class Test_Port_Exposure():
 
     def test_rabbit_mq(self, get_env_variables):
         port_for_rabbitmq=get_env_variables["PORT_FOR_RABBITMQ"]
-        print("\n",27," It forwards local port 31050 to port 5672 of the chef-platform-rabbitmq service in the Kubernetes default namespace, making RabbitMQ accessible externally")
+        print("\n",27," It forwards local port 31050 to port 5672 of the chef-platform-rabbitmq service in the Kubernetes default namespace, making RabbitMQ accessible externally\n")
         command_for_port_forwarding = "nohup kubectl port-forward --namespace default service/chef-platform-rabbitmq --address 0.0.0.0 "+port_for_rabbitmq+":5672 &"
         if current_system== "ubuntu":
             command_for_port_forwarding= "sudo "+command_for_port_forwarding
