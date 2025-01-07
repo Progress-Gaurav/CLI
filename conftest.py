@@ -6,6 +6,7 @@ from junitparser import JUnitXml, TestSuite, TestCase
 from _pytest.junitxml import LogXML
 import xml.etree.ElementTree as ET
 from qmetryupload import upload_test_results
+import json
 
 REPORT_PATH = 'report.xml'
 REPORTING_MARKERS = ['testcasekey', 'storykey']
