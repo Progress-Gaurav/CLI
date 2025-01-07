@@ -21,7 +21,7 @@ def test_check_system_path():
      global path
      path=os.path.expanduser("~/")
      print(path)
-     path+="CLI/integration-tests/chef360/automated-sleep-job/"
+     path+="CLI/integration-tests/chef360/automated-simple-job/"
  
 # #Register Node Management Agent
 @pytest.mark.testcasekey()
