@@ -15,7 +15,6 @@ class Test_Load_licence():
         load_license = subprocess.run(cmd_to_load_license, shell=True,capture_output=True)
         load_license_result= json.loads(load_license.stdout)
         assert load_license.returncode == 0,"error"
-        print(load_license_result)
  
  
 def test_check_system_path():
@@ -35,7 +34,6 @@ class Test_Register_Node_Management_Agent():
         skill_agent_registration = subprocess.run(f"chef-node-management-cli management skill update-agent --body-file {path}register-agent-skill.json --profile node-manager", shell=True,capture_output=True)
         assert skill_agent_registration.returncode == 0
         skill_agent_result= json.loads(skill_agent_registration.stdout)
-        # print(res)
         assert skill_agent_result["code"]== 200, "error"
 
  
