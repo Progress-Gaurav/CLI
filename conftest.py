@@ -171,10 +171,23 @@ class CustomJUnitXML(LogXML):
         consolidated_xml.write(input_file)
     
 @pytest.hookimpl(tryfirst=True)
+def get_key(functionname):
+    with open("CLI/integration-tests/chef360/Test-Cases.json", "r") as f:
+        data = json.load(f)
+    for key, value in data.items():
+        if functionname in key:
+            return value
+    return None
+        
+
+@pytest.hookimpl(tryfirst=True)
 def pytest_collection_modifyitems(items, session):
     item_classnames = {}
     # Extract marker information from each test item
+    
     for item in items:
+        findkeybyclass= str(item.parent.name)
+        key = get_key(findkeybyclass)
         marker_strings = []
         for marker in item.iter_markers():
             ## verify that the marker only has testcasekey
@@ -182,7 +195,7 @@ def pytest_collection_modifyitems(items, session):
                 if marker.args:
                     marker_string = f'{marker.name}="{marker.args[0]}"'
                 else:
-                    marker_string = f'{marker.name}=""'
+                    marker_string = f'{marker.name}="{key}"'
                 marker_strings.append(marker_string)
 
         markers_str = " ".join(marker_strings)
