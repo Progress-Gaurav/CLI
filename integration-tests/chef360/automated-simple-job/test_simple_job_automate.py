@@ -208,10 +208,4 @@ class Test_Job_Run_Steps():
         assert final,"Job instance run failed!"
         print("You have sucessfully ran the job Congratulations")
     
-        lists_run_steps=subprocess.run(f"chef-courier-cli state run list-steps --runId {runid}  --profile courier-operator",shell=True,capture_output=True)
-        print(lists_run_steps.stdout)
-        run_steps=json.loads(lists_run_steps.stdout)
-        print(run_steps)
-        final=any(item["status"]=="success" for item in run_steps["items"])
-        assert final,"Job instance run failed!"
-        print("You have sucessfully ran the job Congratulations")  
+  
