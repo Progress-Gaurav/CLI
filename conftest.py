@@ -173,7 +173,7 @@ class CustomJUnitXML(LogXML):
     
 @pytest.hookimpl(tryfirst=True)
 def get_key(functionname):
-    with open("CLI/integration-tests/chef360/Test-Cases.json", "r") as f:
+    with open("/home/ubuntu/CLI/integration-tests/chef360/Test-Cases.json", "r") as f:
         data = json.load(f)
     for key, value in data.items():
         if functionname in key:
