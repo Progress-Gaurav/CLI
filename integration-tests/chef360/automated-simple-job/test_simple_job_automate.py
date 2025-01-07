@@ -9,7 +9,7 @@ import pytest
 path=""
 @pytest.mark.testcasekey()
 class Test_Load_licence():
-    def test_load_license(get_env_variables):
+    def test_load_license(self,get_env_variables):
         license_id=get_env_variables["LICENSE_ID"]
         cmd_to_load_license="chef-platform-auth-cli license-management license load-license --body '{\"licenseId\": \""+license_id+"\"}' --profile tenant-admin"
         load_license = subprocess.run(cmd_to_load_license, shell=True,capture_output=True)
@@ -108,7 +108,7 @@ class Test_Create_Override_Settings():
 @pytest.mark.testcasekey()
 class Test_Create_Cohort():  
     COHORT_ID=""
-    def test_cohort(get_env_variables):
+    def test_cohort(self, get_env_variables):
         #19-creating cohort(A) and storing the cohort id(A)
         pem_key=get_env_variables["PEM_KEY"]
         node_fqdn=get_env_variables["NODE_FQDN"]
