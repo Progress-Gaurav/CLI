@@ -40,7 +40,7 @@ class Test_Register_Node_Management_Agent():
 
  
 @pytest.mark.testcasekey()
-class Test_defining_skills_verifying_skills():
+class Test_define_and_verify_skills():
  # 16-defining all the skills(A) and verifying skills(A)
     def test_install_skills(self):
         #courier-runner-skill
@@ -173,22 +173,40 @@ class Test_Create_job():
         time.sleep(10)
     
   
+Instance_ID=""
 @pytest.mark.testcasekey()
-class Test_Job_Run():
+class Test_Job_Instance():
     def test_get_instance(self):
         job_instance=subprocess.run(f"chef-courier-cli state instance list-all --job-id {JOB_ID} --profile courier-operator",shell=True,capture_output=True)
         job_instance_result=json.loads(job_instance.stdout)
         print(job_instance_result)
         final=any(item["status"]=="success" for item in job_instance_result["items"])
         assert final,"Job failed"
-        instance=job_instance_result["items"][0]['id']
-        print(instance)
-    
-        list_instance_runs=subprocess.run(f"chef-courier-cli state instance list-instance-runs --instanceId {instance} --profile courier-operator ",shell=True,capture_output=True)
+        global Instance_ID
+        Instance_ID=job_instance_result["items"][0]['id']
+        print(Instance_ID)
+
+Run_ID=""
+@pytest.mark.testcasekey()
+class Test_Job_Run():  
+    def test_run_job(self):      
+        list_instance_runs=subprocess.run(f"chef-courier-cli state instance list-instance-runs --instanceId {Instance_ID} --profile courier-operator ",shell=True,capture_output=True)
         runs_list=json.loads(list_instance_runs.stdout)
+        global Run_ID
         runid=runs_list["items"][0]["runId"]
         print(runs_list)
         print(runid)
+    
+@pytest.mark.testcasekey()
+class Test_Job_Run_Steps():
+    def test_run_steps(self):
+        lists_run_steps=subprocess.run(f"chef-courier-cli state run list-steps --runId {Run_ID}  --profile courier-operator",shell=True,capture_output=True)
+        print(lists_run_steps.stdout)
+        run_steps=json.loads(lists_run_steps.stdout)
+        print(run_steps)
+        final=any(item["status"]=="success" for item in run_steps["items"])
+        assert final,"Job instance run failed!"
+        print("You have sucessfully ran the job Congratulations")
     
         lists_run_steps=subprocess.run(f"chef-courier-cli state run list-steps --runId {runid}  --profile courier-operator",shell=True,capture_output=True)
         print(lists_run_steps.stdout)
