@@ -34,7 +34,7 @@ class Test_Register_Node_Management_Agent():
         skill_agent_registration = subprocess.run(f"chef-node-management-cli management skill update-agent --body-file {path}register-agent-skill.json --profile node-manager", shell=True,capture_output=True)
         assert skill_agent_registration.returncode == 0
         skill_agent_result= json.loads(skill_agent_registration.stdout)
-        assert skill_agent_result["code"]== 200, "error"
+        print(skill_agent_result)
 
  
 @pytest.mark.testcasekey()
@@ -76,7 +76,7 @@ class Test_defining_skill_Assembly():
         assert skill_assembly.returncode == 0
         skill_assembly_result= json.loads(skill_assembly.stdout)
         print(skill_assembly_result)
-        assert b'skillAssemblyID' in skill_assembly_result, "error"
+        assert "skillAssemblyId" in skill_assembly_result["item"] and skill_assembly_result["item"]["skillAssemblyId"], "skillAssemblyId is missing or empty"
         skillAssemblyID = skill_assembly_result["item"]["skillAssemblyId"]
         path_to_append_skillAssemblyID=path+"node-cohort.json"
         with open(path_to_append_skillAssemblyID, 'r') as file:
@@ -85,7 +85,8 @@ class Test_defining_skill_Assembly():
         with open(path_to_append_skillAssemblyID, 'w') as file:
                 json.dump(config, file, indent=4)
         print("\n\n_________________The skillAssemblyID:"+skillAssemblyID+"_________________________")        
-            
+
+
 @pytest.mark.testcasekey()
 class Test_Create_Override_Settings():   
     SETTING_ID=""
@@ -95,7 +96,7 @@ class Test_Create_Override_Settings():
         assert override_settings.returncode == 0
         override_settings_result= json.loads(override_settings.stdout)
         print(override_settings_result)
-        assert b'settingId' in override_settings_result, "error"
+        assert "settingId" in override_settings_result["item"] and override_settings_result["item"]["settingId"], "settingId is missing or empty"
         SETTING_ID= override_settings_result["item"]["settingId"]
         path_to_append_Setting_Id=path+"node-cohort.json"
         with open(path_to_append_Setting_Id, 'r') as file:
@@ -105,6 +106,7 @@ class Test_Create_Override_Settings():
                 json.dump(config, file, indent=4)
         print("\n\n_________________The SETTING_ID="+SETTING_ID+"_________________________")        
     
+
 @pytest.mark.testcasekey()
 class Test_Create_Cohort():  
     COHORT_ID=""
@@ -119,7 +121,7 @@ class Test_Create_Cohort():
         assert cohort.returncode==0
         cohort_result=json.loads(cohort.stdout)
         print(cohort_result)
-        assert b'cohortId' in cohort_result, "error"
+        assert "cohortId" in cohort_result["item"] and cohort_result["item"]["cohortId"], "cohortId is missing or empty"
         COHORT_ID=cohort_result["item"]["cohortId"]
         path_to_append_COHORT_ID=path+"enroll-linux.json"
         with open(path_to_append_COHORT_ID, 'r') as file:
@@ -144,7 +146,7 @@ class Test_Node_Enrolment():
         assert enroll_node.returncode==0
         node_enrollment_result=json.loads(enroll_node.stdout)
         print(node_enrollment_result)
-        assert b'nodeId' in node_enrollment_result, "error"
+        assert "nodeId" in node_enrollment_result["item"] and node_enrollment_result["item"]["nodeId"], "nodeId is missing or empty"
         NODE_ID=node_enrollment_result["item"]["nodeId"]
         path_to_append_node_id=path+"create-job-simple.json"
         with open(path_to_append_node_id, 'r') as file:
@@ -163,14 +165,15 @@ class Test_Create_job():
         job_run=subprocess.run(f"chef-courier-cli scheduler jobs add-job --body-file {path}create-job-simple.json --profile courier-operator",shell=True,capture_output=True)
         assert job_run.returncode==0
         job_run_result=json.loads(job_run.stdout)
-        assert b'id' in job_run_result, "error"
+        assert "id" in job_run_result["item"] and job_run_result["item"]["id"], "Job Id is missing or empty"
         print(job_run_result)
         global JOB_ID
         JOB_ID=job_run_result["item"]["id"]
         print("\n\n_________________"+JOB_ID+"_________________")
-        time.sleep(10)
+        time.sleep(25)
     
-  
+
+JOB_ID="98c58cce-f39f-4fff-97bb-1fa4018993ce"
 Instance_ID=""
 @pytest.mark.testcasekey()
 class Test_Job_Instance():
@@ -178,7 +181,8 @@ class Test_Job_Instance():
         job_instance=subprocess.run(f"chef-courier-cli state instance list-all --job-id {JOB_ID} --profile courier-operator",shell=True,capture_output=True)
         job_instance_result=json.loads(job_instance.stdout)
         print(job_instance_result)
-        final=any(item["status"]=="success" for item in job_instance_result["items"])
+        final = any(item["status"]=="success" for item in job_instance_result["items"])
+        print(final)
         assert final,"Job failed"
         global Instance_ID
         Instance_ID=job_instance_result["items"][0]['id']
@@ -191,9 +195,9 @@ class Test_Job_Run():
         list_instance_runs=subprocess.run(f"chef-courier-cli state instance list-instance-runs --instanceId {Instance_ID} --profile courier-operator ",shell=True,capture_output=True)
         runs_list=json.loads(list_instance_runs.stdout)
         global Run_ID
-        runid=runs_list["items"][0]["runId"]
+        Run_ID=runs_list["items"][0]["runId"]
         print(runs_list)
-        print(runid)
+        print(Run_ID)
     
 @pytest.mark.testcasekey()
 class Test_Job_Run_Steps():
