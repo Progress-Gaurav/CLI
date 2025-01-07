@@ -23,7 +23,7 @@ def test_check_system():
 
 # #### Helm Setup
 # curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-@pytest.mark.testcasekey('CHEF-TC-970')
+@pytest.mark.testcasekey()
 class Test_Install_Binaries():
     def test_download_helm_binary(self):
         print("\n",1," Downloading Helm Setup")
@@ -236,7 +236,7 @@ class Test_Install_Binaries():
             assert minikube_status.returncode==0
 
 
-@pytest.mark.testcasekey('CHEF-TC-971')
+@pytest.mark.testcasekey()
 class Test_AWS_Setup():
     # yes \"y\" | sudo apt install awscli
     def test_install_awscli(self):
@@ -298,7 +298,7 @@ class Test_AWS_Setup():
             print( awscli_version.stdout)
             assert  awscli_version.returncode==0
 
-@pytest.mark.testcasekey('CHEF-TC-972')
+@pytest.mark.testcasekey()
 class Test_Image_Secret(): 
     # kubectl create secret docker-registry regcred  --docker-server=448877188565.dkr.ecr.us-east-2.amazonaws.com   --docker-username=AWS   --docker-password=$(aws ecr get-login-password --region us-east-2)
     def test_create_image_secret(self):
@@ -310,7 +310,7 @@ class Test_Image_Secret():
         print(create_image.stdout)
         assert create_image.returncode==0
  
-@pytest.mark.testcasekey('CHEF-TC-973')
+@pytest.mark.testcasekey()
 class Test_Get_repository():
     #sudo apt install git -y
     def test_install_git(self):
@@ -330,7 +330,7 @@ class Test_Get_repository():
         assert clone_repo.returncode==0
 
 
-@pytest.mark.testcasekey('CHEF-TC-974')
+@pytest.mark.testcasekey()
 class Test_Install_Chef_Platform():
     #sed -i 's/tenant-1.dev-360.chef.co/ec2-3-94-190-118.compute-1.amazonaws.com/g' values.yaml
     def test_change_tenant_fqdn(self, get_env_variables):
@@ -358,22 +358,11 @@ class Test_Install_Chef_Platform():
         assert  chef_installation.returncode==0
 
 
-    def test_temp_fixtures(self):
-        path_to_config1= "helm/chef-platform/charts/chef-services/charts/platform-services/charts/public-api-gateway/config/config.yaml"
-        fix_error1="sed -i 's/1924905600/1767225599/g' "+path_to_config1
-        fix1= subprocess.run(fix_error1, shell=True,capture_output=True)
-        assert fix1.returncode==0
-        path_to_config2= "helm/chef-platform/charts/chef-services/charts/platform-services/charts/internal-api-gateway/config/config.yaml"
-        fix_error2="sed -i 's/1924905600/1767225599/g' "+path_to_config2
-        fix2= subprocess.run(fix_error2, shell=True,capture_output=True)
-        assert fix2.returncode==0
-
-
-@pytest.mark.testcasekey('CHEF-TC-975')
+@pytest.mark.testcasekey()
 class Test_Port_Exposure():
     def test_mailpit_port_exposure(self, get_env_variables):
         port_for_mailpit=get_env_variables["PORT_FOR_MAILPIT"]
-        print("\n",25, " This command runs kubectl port-forward in the background (using nohup) to expose the mailpit service in the default namespace on localhost and all network interfaces (0.0.0.0), mapping port 31100 to 8025\n")
+        print("\n",25, " This command runs kubectl port-forward in the background (using nohup) to expose the mailpit service in the default namespace on localhost and all network interfaces (0.0.0.0), mapping port 31100 to 8025")
         command_for_port_forwarding = "nohup kubectl port-forward --namespace default service/mailpit --address 0.0.0.0 "+port_for_mailpit+":8025 &"
         if current_system== "ubuntu":
             command_for_port_forwarding= "sudo "+command_for_port_forwarding
@@ -385,7 +374,7 @@ class Test_Port_Exposure():
 
     def test_reverse_proxy(self, get_env_variables):
         port_for_nginx_reverse_proxy=get_env_variables["PORT_FOR_NGINX_REVERSE_PROXY"]
-        print("\n",26," This command runs kubectl port-forward in the background (using nohup) to expose the nginx-reverse-proxy service in the default namespace on all network interfaces (0.0.0.0), mapping port 31000 on the host to port 8080 on the service.\n")
+        print("\n",26," This command runs kubectl port-forward in the background (using nohup) to expose the nginx-reverse-proxy service in the default namespace on all network interfaces (0.0.0.0), mapping port 31000 on the host to port 8080 on the service..")
         command_for_port_forwarding = "nohup kubectl port-forward --namespace default service/nginx-reverse-proxy --address 0.0.0.0 "+port_for_nginx_reverse_proxy+":8080 &"
         if current_system== "ubuntu":
             command_for_port_forwarding= "sudo "+command_for_port_forwarding
@@ -397,7 +386,7 @@ class Test_Port_Exposure():
 
     def test_rabbit_mq(self, get_env_variables):
         port_for_rabbitmq=get_env_variables["PORT_FOR_RABBITMQ"]
-        print("\n",27," It forwards local port 31050 to port 5672 of the chef-platform-rabbitmq service in the Kubernetes default namespace, making RabbitMQ accessible externally\n")
+        print("\n",27," It forwards local port 31050 to port 5672 of the chef-platform-rabbitmq service in the Kubernetes default namespace, making RabbitMQ accessible externally")
         command_for_port_forwarding = "nohup kubectl port-forward --namespace default service/chef-platform-rabbitmq --address 0.0.0.0 "+port_for_rabbitmq+":5672 &"
         if current_system== "ubuntu":
             command_for_port_forwarding= "sudo "+command_for_port_forwarding
@@ -408,7 +397,7 @@ class Test_Port_Exposure():
 
 
 
-@pytest.mark.testcasekey('CHEF-TC-976')
+@pytest.mark.testcasekey()
 class Test_CLI_Installation():
     def test_install_cli(self, get_env_variables):
         print("\n",28," Installing CLI based on the OS")
