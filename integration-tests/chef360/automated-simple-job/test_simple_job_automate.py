@@ -173,7 +173,7 @@ class Test_Create_job():
         time.sleep(25)
     
 
-JOB_ID="98c58cce-f39f-4fff-97bb-1fa4018993ce"
+
 Instance_ID=""
 @pytest.mark.testcasekey()
 class Test_Job_Instance():
